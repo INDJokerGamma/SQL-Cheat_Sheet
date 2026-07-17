@@ -1,156 +1,539 @@
-Cheat sheet
-SQL Cheat Sheet
-1. Database Management
-Create, Modify, and Delete Tables
--- Create a new table with an integer primary key and a text column
+# 📘 SQL Cheat Sheet
+
+A quick reference guide for commonly used SQL commands.
+
+---
+
+# 1. Database Management
+
+## Create Table
+
+```sql
 CREATE TABLE table_name (
     id INT PRIMARY KEY,
     name VARCHAR(50)
 );
+```
 
--- Add a new column to an existing table
-ALTER TABLE table_name ADD column_name INT;
+## Add Column
 
--- Delete a table permanently
+```sql
+ALTER TABLE table_name
+ADD column_name INT;
+```
+
+## Drop Table
+
+```sql
 DROP TABLE table_name;
-Indexes and Views
--- Create an index to speed up searches on a column
-CREATE INDEX idx_name ON table_name (column1);
+```
 
--- Remove an existing index
+---
+
+## Indexes
+
+### Create Index
+
+```sql
+CREATE INDEX idx_name
+ON table_name(column1);
+```
+
+### Drop Index
+
+```sql
 DROP INDEX idx_name;
+```
 
--- Create a virtual table based on a query
-CREATE VIEW view_name AS SELECT column1, column2 FROM table_name;
+---
 
--- Remove a view
+## Views
+
+### Create View
+
+```sql
+CREATE VIEW view_name AS
+SELECT column1, column2
+FROM table_name;
+```
+
+### Drop View
+
+```sql
 DROP VIEW view_name;
-Renaming Tables
--- Rename a table
+```
+
+---
+
+## Rename Table
+
+```sql
 RENAME TABLE old_table TO new_table;
-2. Data Querying
-Basic Queries
--- Select specific columns from a table
-SELECT column1, column2 FROM table_name;
+```
 
--- Retrieve unique values from a column
-SELECT DISTINCT column1 FROM table_name;
-Filtering Data
--- Select rows that meet a specific condition
-SELECT * FROM table_name WHERE column1 = 'value';
+---
 
--- Filter rows with multiple possible values
-SELECT * FROM table_name WHERE column1 IN ('value1', 'value2');
+# 2. Data Querying
 
--- Filter rows within a range
-SELECT * FROM table_name WHERE column1 BETWEEN 10 AND 50;
+## Select Data
 
--- Search for patterns in text columns
-SELECT * FROM table_name WHERE column1 LIKE 'A%';
-Sorting and Limiting
--- Sort results in ascending order
-SELECT * FROM table_name ORDER BY column1 ASC;
+### Select Columns
 
--- Limit the number of rows returned
-SELECT * FROM table_name LIMIT 10;
-3. Aggregation & Grouping
--- Count the number of rows
-SELECT COUNT(*) FROM table_name;
+```sql
+SELECT column1, column2
+FROM table_name;
+```
 
--- Sum values of a numeric column
-SELECT SUM(column1) FROM table_name;
+### Select All Columns
 
--- Calculate the average of a numeric column
-SELECT AVG(column1) FROM table_name;
+```sql
+SELECT *
+FROM table_name;
+```
 
--- Find the minimum value
-SELECT MIN(column1) FROM table_name;
+### Unique Values
 
--- Find the maximum value
-SELECT MAX(column1) FROM table_name;
+```sql
+SELECT DISTINCT column1
+FROM table_name;
+```
 
--- Group rows for aggregate functions
-SELECT column1, COUNT(*) FROM table_name GROUP BY column1;
+---
 
--- Filter grouped results
-SELECT column1, COUNT(*) FROM table_name GROUP BY column1 HAVING COUNT(*) > 5;
-4. Data Manipulation
--- Insert new rows into a table
-INSERT INTO table_name (column1, column2) VALUES ('value1', 'value2');
+## Filtering
 
--- Update existing rows
-UPDATE table_name SET column1 = 'new_value' WHERE id = 1;
+### WHERE
 
--- Delete specific rows
-DELETE FROM table_name WHERE column1 = 'value';
+```sql
+SELECT *
+FROM table_name
+WHERE column1 = 'value';
+```
 
--- Remove all rows from a table quickly
+### IN
+
+```sql
+SELECT *
+FROM table_name
+WHERE column1 IN ('value1', 'value2');
+```
+
+### BETWEEN
+
+```sql
+SELECT *
+FROM table_name
+WHERE column1 BETWEEN 10 AND 50;
+```
+
+### LIKE
+
+```sql
+SELECT *
+FROM table_name
+WHERE column1 LIKE 'A%';
+```
+
+Common Wildcards
+
+| Pattern | Meaning |
+|---------|---------|
+| `'A%'` | Starts with A |
+| `'%A'` | Ends with A |
+| `'%A%'` | Contains A |
+| `'A_'` | A followed by one character |
+
+---
+
+## Sorting
+
+### Ascending
+
+```sql
+SELECT *
+FROM table_name
+ORDER BY column1 ASC;
+```
+
+### Descending
+
+```sql
+SELECT *
+FROM table_name
+ORDER BY column1 DESC;
+```
+
+---
+
+## Limit Results
+
+```sql
+SELECT *
+FROM table_name
+LIMIT 10;
+```
+
+---
+
+# 3. Aggregate Functions
+
+## COUNT
+
+```sql
+SELECT COUNT(*)
+FROM table_name;
+```
+
+## SUM
+
+```sql
+SELECT SUM(column1)
+FROM table_name;
+```
+
+## AVG
+
+```sql
+SELECT AVG(column1)
+FROM table_name;
+```
+
+## MIN
+
+```sql
+SELECT MIN(column1)
+FROM table_name;
+```
+
+## MAX
+
+```sql
+SELECT MAX(column1)
+FROM table_name;
+```
+
+---
+
+# 4. GROUP BY & HAVING
+
+## GROUP BY
+
+```sql
+SELECT column1,
+       COUNT(*)
+FROM table_name
+GROUP BY column1;
+```
+
+## HAVING
+
+```sql
+SELECT column1,
+       COUNT(*)
+FROM table_name
+GROUP BY column1
+HAVING COUNT(*) > 5;
+```
+
+---
+
+# 5. Data Manipulation (DML)
+
+## INSERT
+
+```sql
+INSERT INTO table_name(column1, column2)
+VALUES ('value1', 'value2');
+```
+
+## UPDATE
+
+```sql
+UPDATE table_name
+SET column1 = 'new_value'
+WHERE id = 1;
+```
+
+## DELETE
+
+```sql
+DELETE FROM table_name
+WHERE column1 = 'value';
+```
+
+## TRUNCATE
+
+```sql
 TRUNCATE TABLE table_name;
-5. Joins & Set Operations
--- Retrieve matching records from two tables
-SELECT * FROM table1 INNER JOIN table2 ON table1.id = table2.id;
+```
 
--- Retrieve all records from the left table and matching ones from the right table
-SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id;
+---
 
--- Retrieve all records from the right table and matching ones from the left table
-SELECT * FROM table1 RIGHT JOIN table2 ON table1.id = table2.id;
+# 6. Joins
 
--- Retrieve all records from both tables
-SELECT * FROM table1 FULL OUTER JOIN table2 ON table1.id = table2.id;
+## INNER JOIN
 
--- Create a Cartesian product of both tables
-SELECT * FROM table1 CROSS JOIN table2;
-Set Operations
--- Combine results from two queries and remove duplicates
-SELECT column1 FROM table1 UNION SELECT column1 FROM table2;
+```sql
+SELECT *
+FROM table1
+INNER JOIN table2
+ON table1.id = table2.id;
+```
 
--- Combine results from two queries and include duplicates
-SELECT column1 FROM table1 UNION ALL SELECT column1 FROM table2;
-6. Window Functions
--- Assign a unique row number to each partition
-SELECT column1, ROW_NUMBER() OVER (PARTITION BY column2 ORDER BY column3) FROM table_name;
+---
 
--- Rank rows with gaps for ties
-SELECT column1, RANK() OVER (PARTITION BY column2 ORDER BY column3) FROM table_name;
-7. Subqueries & Common Table Expressions (CTEs)
--- Subquery to get maximum value
-SELECT column1 FROM table1 WHERE column2 = (SELECT MAX(column2) FROM table2);
+## LEFT JOIN
 
--- Using a Common Table Expression (CTE)
+```sql
+SELECT *
+FROM table1
+LEFT JOIN table2
+ON table1.id = table2.id;
+```
+
+---
+
+## RIGHT JOIN
+
+```sql
+SELECT *
+FROM table1
+RIGHT JOIN table2
+ON table1.id = table2.id;
+```
+
+---
+
+## FULL OUTER JOIN
+
+```sql
+SELECT *
+FROM table1
+FULL OUTER JOIN table2
+ON table1.id = table2.id;
+```
+
+---
+
+## CROSS JOIN
+
+```sql
+SELECT *
+FROM table1
+CROSS JOIN table2;
+```
+
+---
+
+# 7. Set Operations
+
+## UNION
+
+```sql
+SELECT column1
+FROM table1
+
+UNION
+
+SELECT column1
+FROM table2;
+```
+
+---
+
+## UNION ALL
+
+```sql
+SELECT column1
+FROM table1
+
+UNION ALL
+
+SELECT column1
+FROM table2;
+```
+
+---
+
+# 8. Window Functions
+
+## ROW_NUMBER()
+
+```sql
+SELECT column1,
+       ROW_NUMBER() OVER (
+           PARTITION BY column2
+           ORDER BY column3
+       )
+FROM table_name;
+```
+
+---
+
+## RANK()
+
+```sql
+SELECT column1,
+       RANK() OVER (
+           PARTITION BY column2
+           ORDER BY column3
+       )
+FROM table_name;
+```
+
+---
+
+# 9. Subqueries
+
+## Single Row Subquery
+
+```sql
+SELECT column1
+FROM table1
+WHERE column2 = (
+    SELECT MAX(column2)
+    FROM table2
+);
+```
+
+---
+
+# 10. Common Table Expressions (CTEs)
+
+```sql
 WITH CTE AS (
-    SELECT column1, AVG(column2) AS avg_value FROM table_name GROUP BY column1
+    SELECT column1,
+           AVG(column2) AS avg_value
+    FROM table_name
+    GROUP BY column1
 )
-SELECT * FROM CTE WHERE avg_value > 50;
-8. Transactions & Stored Procedures
--- Start a transaction and commit changes
-START TRANSACTION;
-UPDATE table_name SET column1 = 'value' WHERE id = 1;
-COMMIT;
 
--- Rollback if needed
+SELECT *
+FROM CTE
+WHERE avg_value > 50;
+```
+
+---
+
+# 11. Transactions
+
+## Commit Transaction
+
+```sql
+START TRANSACTION;
+
+UPDATE table_name
+SET column1 = 'value'
+WHERE id = 1;
+
+COMMIT;
+```
+
+---
+
+## Rollback
+
+```sql
 ROLLBACK;
-Stored Procedures
--- Create a stored procedure
+```
+
+---
+
+# 12. Stored Procedures
+
+## Create Procedure
+
+```sql
 CREATE PROCEDURE GetEmployee(IN emp_id INT)
 BEGIN
-    SELECT * FROM employees WHERE id = emp_id;
+    SELECT *
+    FROM employees
+    WHERE id = emp_id;
 END;
+```
 
--- Execute a stored procedure
+---
+
+## Execute Procedure
+
+```sql
 CALL GetEmployee(1);
-9. String & Date Functions
--- Concatenate two strings
-SELECT CONCAT(first_name, ' ', last_name) FROM employees;
+```
 
--- Extract a substring
-SELECT SUBSTRING(column1, 1, 5) FROM table_name;
+---
 
--- Get the current timestamp
+# 13. String Functions
+
+## CONCAT
+
+```sql
+SELECT CONCAT(first_name, ' ', last_name)
+FROM employees;
+```
+
+## SUBSTRING
+
+```sql
+SELECT SUBSTRING(column1, 1, 5)
+FROM table_name;
+```
+
+---
+
+# 14. Date Functions
+
+## Current Date & Time
+
+```sql
 SELECT NOW();
-10. Performance Optimization
--- Create an index for faster searches
-CREATE INDEX idx_column ON table_name(column1);
+```
 
--- Analyze a query execution plan
-EXPLAIN SELECT * FROM table_name WHERE column1 > 1000;
+---
+
+# 15. Performance Optimization
+
+## Create Index
+
+```sql
+CREATE INDEX idx_column
+ON table_name(column1);
+```
+
+---
+
+## Query Execution Plan
+
+```sql
+EXPLAIN
+SELECT *
+FROM table_name
+WHERE column1 > 1000;
+```
+
+---
+
+# 📚 SQL Learning Roadmap
+
+- ✅ SELECT
+- ✅ WHERE
+- ✅ DISTINCT
+- ✅ ORDER BY
+- ✅ LIMIT
+- ✅ Aggregate Functions
+- ✅ GROUP BY
+- ✅ HAVING
+- ✅ CASE WHEN
+- ✅ Joins
+- ✅ Subqueries
+- ✅ EXISTS / NOT EXISTS
+- ✅ UNION / UNION ALL
+- ✅ CTEs
+- ✅ Window Functions
+- ✅ Ranking Functions
+- ✅ Transactions
+- ✅ Stored Procedures
+- ✅ Performance Optimization
+
+---
+
+## ⭐ If this cheat sheet helped you, consider giving the repository a star!
