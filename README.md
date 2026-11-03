@@ -1,298 +1,287 @@
-# 📘 Complete SQL Cheat Sheet
+# 📘 Complete Oracle SQL Cheat Sheet
 
-A comprehensive SQL quick reference covering basic to advanced SQL concepts, with syntax, practical queries, explanations, and examples. Useful for coding interviews, placement preparation, database development, and daily practice.
+A practical reference for learning SQL using **Oracle Database and Oracle SQL Developer**. Covers beginner to advanced SQL, PL/SQL, database objects, queries, explanations, and interview problems.
 
-**Database:** MySQL  
+**Database:** Oracle Database  
+**IDE:** Oracle SQL Developer  
 **Level:** Beginner to Advanced
+
+> **Important:** SQL Developer is the tool used to connect to Oracle Database. SQL syntax is determined by the Oracle Database version, not by the editor.
 
 ---
 
 # 📑 Table of Contents
 
 1. [SQL Basics](#1-sql-basics)
-2. [Database Management](#2-database-management)
-3. [Data Types and Constraints](#3-data-types-and-constraints)
-4. [Data Querying - SELECT](#4-data-querying---select)
-5. [Filtering and Operators](#5-filtering-and-operators)
-6. [Sorting and Limiting](#6-sorting-and-limiting)
-7. [Aggregate Functions](#7-aggregate-functions)
-8. [GROUP BY and HAVING](#8-group-by-and-having)
-9. [CASE WHEN](#9-case-when)
-10. [Data Manipulation (DML)](#10-data-manipulation-dml)
-11. [Joins](#11-joins)
-12. [Set Operations](#12-set-operations)
-13. [Subqueries](#13-subqueries)
-14. [EXISTS and NOT EXISTS](#14-exists-and-not-exists)
-15. [Common Table Expressions (CTEs)](#15-common-table-expressions-ctes)
-16. [Window Functions](#16-window-functions)
-17. [Ranking Functions](#17-ranking-functions)
-18. [String Functions](#18-string-functions)
-19. [Numeric Functions](#19-numeric-functions)
-20. [Date and Time Functions](#20-date-and-time-functions)
-21. [NULL Handling](#21-null-handling)
-22. [Indexes](#22-indexes)
-23. [Views](#23-views)
-24. [Stored Procedures](#24-stored-procedures)
-25. [Functions and Triggers](#25-functions-and-triggers)
-26. [Transactions](#26-transactions)
-27. [Performance Optimization](#27-performance-optimization)
-28. [SQL Execution Order](#28-sql-execution-order)
-29. [SQL Interview Quick Reference](#29-sql-interview-quick-reference)
-30. [SQL Learning Roadmap](#30-sql-learning-roadmap)
+2. [Oracle Database and Schema Management](#2-oracle-database-and-schema-management)
+3. [Data Types](#3-data-types)
+4. [Constraints](#4-constraints)
+5. [SELECT Statements](#5-select-statements)
+6. [Filtering and Operators](#6-filtering-and-operators)
+7. [Sorting and Fetching Rows](#7-sorting-and-fetching-rows)
+8. [Aggregate Functions](#8-aggregate-functions)
+9. [GROUP BY and HAVING](#9-group-by-and-having)
+10. [CASE Expressions](#10-case-expressions)
+11. [Data Manipulation](#11-data-manipulation)
+12. [Joins](#12-joins)
+13. [Set Operators](#13-set-operators)
+14. [Subqueries](#14-subqueries)
+15. [EXISTS and NOT EXISTS](#15-exists-and-not-exists)
+16. [Common Table Expressions](#16-common-table-expressions)
+17. [Window and Analytic Functions](#17-window-and-analytic-functions)
+18. [Ranking Functions](#18-ranking-functions)
+19. [String Functions](#19-string-functions)
+20. [Numeric Functions](#20-numeric-functions)
+21. [Date and Time Functions](#21-date-and-time-functions)
+22. [NULL Handling](#22-null-handling)
+23. [Indexes](#23-indexes)
+24. [Views](#24-views)
+25. [Sequences and Identity Columns](#25-sequences-and-identity-columns)
+26. [PL/SQL Basics](#26-plsql-basics)
+27. [Stored Procedures](#27-stored-procedures)
+28. [Functions](#28-functions)
+29. [Cursors](#29-cursors)
+30. [Triggers](#30-triggers)
+31. [Transactions](#31-transactions)
+32. [Performance and Execution Plans](#32-performance-and-execution-plans)
+33. [SQL Logical Processing Order](#33-sql-logical-processing-order)
+34. [Oracle SQL Interview Questions](#34-oracle-sql-interview-questions)
+35. [SQL Learning Roadmap](#35-sql-learning-roadmap)
 
 ---
 
 # 1. SQL Basics
 
-SQL stands for **Structured Query Language**. It is used to communicate with relational databases to store, retrieve, modify, and manage data.
+SQL stands for **Structured Query Language**. It is used to retrieve, insert, update, delete, and manage data in relational databases.
 
 ### SQL Command Categories
 
 | Category | Full Form | Purpose | Commands |
 |---|---|---|---|
-| DDL | Data Definition Language | Defines database structure | CREATE, ALTER, DROP, TRUNCATE |
-| DML | Data Manipulation Language | Modifies table data | INSERT, UPDATE, DELETE |
+| DDL | Data Definition Language | Defines database objects | CREATE, ALTER, DROP, TRUNCATE, RENAME |
+| DML | Data Manipulation Language | Changes table data | INSERT, UPDATE, DELETE, MERGE |
 | DQL | Data Query Language | Retrieves data | SELECT |
-| DCL | Data Control Language | Controls permissions | GRANT, REVOKE |
+| DCL | Data Control Language | Manages privileges | GRANT, REVOKE |
 | TCL | Transaction Control Language | Manages transactions | COMMIT, ROLLBACK, SAVEPOINT |
 
 ---
 
-# 2. Database Management
+# 2. Oracle Database and Schema Management
 
-### CREATE DATABASE
+In Oracle, a user generally owns a **schema**. A schema contains objects such as tables, views, indexes, sequences, procedures, and functions.
 
-Creates a new database.
+Unlike MySQL, you normally do not create and switch between databases using `CREATE DATABASE` and `USE`.
 
-```sql
-CREATE DATABASE company;
-```
-
-### SHOW DATABASES
-
-Displays all available databases.
+### Show the Current User
 
 ```sql
-SHOW DATABASES;
+SELECT USER
+FROM dual;
 ```
 
-### USE DATABASE
-
-Selects a database to work with.
+### Show the Current Schema
 
 ```sql
-USE company;
+SELECT SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+FROM dual;
 ```
 
-### DROP DATABASE
-
-Deletes an entire database and its contents.
+### Show Tables Owned by the Current User
 
 ```sql
-DROP DATABASE company;
+SELECT table_name
+FROM user_tables
+ORDER BY table_name;
 ```
 
-### CREATE TABLE
-
-Creates a new table.
+### Show Tables Accessible to the Current User
 
 ```sql
-CREATE TABLE employees (
-    employee_id INT PRIMARY KEY,
-    first_name VARCHAR(50),
-    salary DECIMAL(10,2),
-    department_id INT
-);
+SELECT owner, table_name
+FROM all_tables
+ORDER BY owner, table_name;
 ```
 
-### SHOW TABLES
-
-Displays all tables in the selected database.
+### Describe a Table
 
 ```sql
-SHOW TABLES;
+DESC employees;
 ```
 
-### DESCRIBE TABLE
-
-Displays the structure of a table, including column names, data types, and constraints.
+Or query its metadata:
 
 ```sql
-DESCRIBE employees;
+SELECT column_name, data_type, nullable
+FROM user_tab_columns
+WHERE table_name = 'EMPLOYEES'
+ORDER BY column_id;
 ```
 
-### ALTER TABLE
+**Note:** Oracle stores unquoted object names in uppercase in the data dictionary.
 
-Modifies an existing table structure.
-
-**Add a column:**
+### Create a User (requires appropriate privileges)
 
 ```sql
-ALTER TABLE employees
-ADD email VARCHAR(100);
+CREATE USER practice_user IDENTIFIED BY password123;
+
+GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW,
+      CREATE SEQUENCE, CREATE PROCEDURE, CREATE TRIGGER
+TO practice_user;
 ```
 
-**Modify a column:**
+A DBA may also need to assign an appropriate tablespace quota before the user can create objects.
+
+### Change the Current Schema
 
 ```sql
-ALTER TABLE employees
-MODIFY salary DECIMAL(12,2);
+ALTER SESSION SET CURRENT_SCHEMA = practice_user;
 ```
 
-**Rename a column:**
+This changes name resolution; it does not log you in as that user or grant additional privileges.
+
+### Drop a User (administrative operation)
 
 ```sql
-ALTER TABLE employees
-RENAME COLUMN first_name TO employee_name;
+DROP USER practice_user CASCADE;
 ```
 
-**Drop a column:**
-
-```sql
-ALTER TABLE employees
-DROP COLUMN email;
-```
-
-### RENAME TABLE
-
-Changes the name of a table.
-
-```sql
-RENAME TABLE employees TO staff;
-```
-
-### DROP TABLE
-
-Deletes the table structure and all its records.
-
-```sql
-DROP TABLE employees;
-```
-
-### TRUNCATE TABLE
-
-Removes all records while keeping the table structure.
-
-```sql
-TRUNCATE TABLE employees;
-```
-
-**DROP vs TRUNCATE vs DELETE**
-
-| Command | What it does |
-|---|---|
-| DELETE | Removes selected or all rows |
-| TRUNCATE | Removes all rows but keeps the table |
-| DROP | Removes the entire table |
+`CASCADE` also removes objects owned by that user. Use carefully.
 
 ---
 
-# 3. Data Types and Constraints
+# 3. Data Types
 
-## Common SQL Data Types
+Oracle uses different data types from MySQL.
 
-| Data Type | Meaning | Example |
+| Oracle Data Type | Meaning | Example |
 |---|---|---|
-| INT | Integer values | 100 |
-| BIGINT | Large integer values | 1000000 |
-| DECIMAL(p,s) | Exact decimal values | 12500.50 |
-| FLOAT | Approximate decimal values | 12.5 |
-| CHAR(n) | Fixed-length string | 'ABC' |
-| VARCHAR(n) | Variable-length string | 'Piyush' |
-| TEXT | Large text | Description |
-| DATE | Date | 2026-11-03 |
-| TIME | Time | 10:30:00 |
-| DATETIME | Date and time | 2026-11-03 10:30:00 |
-| BOOLEAN | True or false | TRUE |
+| NUMBER(p,s) | Numeric value with precision and scale | NUMBER(10,2) |
+| INTEGER | Whole number (subtype of NUMBER) | 100 |
+| BINARY_FLOAT | Single-precision floating-point | 12.5 |
+| BINARY_DOUBLE | Double-precision floating-point | 12.5 |
+| CHAR(n) | Fixed-length character string | CHAR(5) |
+| VARCHAR2(n) | Variable-length character string | VARCHAR2(50) |
+| NVARCHAR2(n) | Variable-length Unicode string | NVARCHAR2(50) |
+| CLOB | Large character data | Long description |
+| BLOB | Binary large object | Image or file data |
+| DATE | Date and time to seconds | DATE |
+| TIMESTAMP | Date and time with fractional seconds | TIMESTAMP |
+| TIMESTAMP WITH TIME ZONE | Timestamp with time zone | TIMESTAMP WITH TIME ZONE |
+| RAW(n) | Raw binary data | RAW(16) |
 
-## SQL Constraints
+**Important Oracle differences:**
+- Use `VARCHAR2` for variable-length character data.
+- Oracle `DATE` stores both date and time to seconds.
+- Oracle does not have a separate SQL `TIME` data type.
+- `BOOLEAN` is available in PL/SQL. SQL table-column support depends on Oracle Database version; Oracle Database 23ai supports SQL BOOLEAN columns.
 
-Constraints enforce rules on the data stored in a table.
+### CREATE TABLE
+
+```sql
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    salary NUMBER(10,2),
+    department_id NUMBER
+);
+```
+
+---
+
+# 4. Constraints
+
+Constraints enforce rules on table data.
 
 ### PRIMARY KEY
 
-Uniquely identifies every row. It cannot contain NULL values or duplicates.
+Uniquely identifies every row. A primary key cannot contain NULL or duplicate values.
 
 ```sql
 CREATE TABLE students (
-    student_id INT PRIMARY KEY,
-    name VARCHAR(50)
+    student_id NUMBER PRIMARY KEY,
+    name VARCHAR2(50)
 );
 ```
 
 ### FOREIGN KEY
 
-Creates a relationship between two tables by referencing a primary or unique key in another table.
+Creates a relationship with a primary key or unique key in another table.
 
 ```sql
 CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
-    student_id INT,
-    FOREIGN KEY (student_id)
-    REFERENCES students(student_id)
+    order_id NUMBER PRIMARY KEY,
+    student_id NUMBER,
+    CONSTRAINT fk_orders_student
+        FOREIGN KEY (student_id)
+        REFERENCES students(student_id)
 );
 ```
 
 ### UNIQUE
 
-Ensures that values in a column are unique.
+Prevents duplicate values in a column or combination of columns.
 
 ```sql
 CREATE TABLE users (
-    user_id INT PRIMARY KEY,
-    email VARCHAR(100) UNIQUE
+    user_id NUMBER PRIMARY KEY,
+    email VARCHAR2(100) UNIQUE
 );
 ```
 
+Oracle UNIQUE constraints allow NULL values; the exact behavior depends on whether one or multiple columns are involved.
+
 ### NOT NULL
 
-Prevents a column from storing NULL values.
+Prevents a column from storing NULL.
 
 ```sql
 CREATE TABLE employees (
-    employee_id INT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50) NOT NULL
 );
 ```
 
 ### CHECK
 
-Ensures that values satisfy a specified condition.
+Ensures that values satisfy a condition.
 
 ```sql
 CREATE TABLE employees (
-    employee_id INT PRIMARY KEY,
-    salary DECIMAL(10,2) CHECK (salary > 0)
+    employee_id NUMBER PRIMARY KEY,
+    salary NUMBER(10,2) CHECK (salary > 0)
 );
 ```
 
 ### DEFAULT
 
-Assigns a default value when no value is provided.
+Provides a value when an INSERT omits the column.
 
 ```sql
 CREATE TABLE employees (
-    employee_id INT PRIMARY KEY,
-    country VARCHAR(50) DEFAULT 'India'
+    employee_id NUMBER PRIMARY KEY,
+    country VARCHAR2(50) DEFAULT 'India'
 );
 ```
 
-### AUTO_INCREMENT
-
-Automatically generates sequential integer values for new rows in MySQL.
+### Add a Constraint Later
 
 ```sql
-CREATE TABLE employees (
-    employee_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50)
-);
+ALTER TABLE employees
+ADD CONSTRAINT chk_salary CHECK (salary >= 0);
+```
+
+### Drop a Constraint
+
+```sql
+ALTER TABLE employees
+DROP CONSTRAINT chk_salary;
 ```
 
 ---
 
-# 4. Data Querying - SELECT
+# 5. SELECT Statements
 
-SELECT is used to retrieve data from one or more tables.
+`SELECT` retrieves data from one or more tables.
 
 ### Select Specific Columns
 
@@ -310,18 +299,30 @@ SELECT *
 FROM employees;
 ```
 
-**Meaning:** Retrieves all columns from the table.
+**Meaning:** Retrieves all columns.
+
+### Select a Literal Value
+
+Oracle uses the special one-row table `DUAL` for expressions that do not need a real table.
+
+```sql
+SELECT 'Hello Oracle' AS message
+FROM dual;
+```
+
+```sql
+SELECT 10 + 20 AS result
+FROM dual;
+```
 
 ### DISTINCT
 
-Returns only unique values by removing duplicate combinations of selected columns.
+Removes duplicate result rows.
 
 ```sql
 SELECT DISTINCT department_id
 FROM employees;
 ```
-
-**Meaning:** Displays each department only once.
 
 ### DISTINCT on Multiple Columns
 
@@ -334,8 +335,6 @@ FROM employees;
 
 ### Column Aliases
 
-Renames a column in the query output without changing the actual table structure.
-
 ```sql
 SELECT
     first_name AS employee_name,
@@ -345,8 +344,6 @@ FROM employees;
 
 ### Calculated Columns
 
-Performs calculations directly in the SELECT statement.
-
 ```sql
 SELECT
     first_name,
@@ -355,30 +352,22 @@ SELECT
 FROM employees;
 ```
 
-### CONCAT with SELECT
+### Concatenation Operator
 
-Combines multiple columns into a single string.
+Oracle uses `||` to concatenate strings.
 
 ```sql
-SELECT CONCAT(first_name, ' ', last_name) AS full_name
+SELECT first_name || ' ' || last_name AS full_name
 FROM employees;
 ```
 
+`CONCAT()` is also available, but it accepts two arguments at a time.
+
 ---
 
-# 5. Filtering and Operators
+# 6. Filtering and Operators
 
-The WHERE clause filters rows based on specified conditions.
-
-### WHERE
-
-Returns only records satisfying a condition.
-
-```sql
-SELECT *
-FROM employees
-WHERE salary > 5000;
-```
+`WHERE` filters rows before grouping.
 
 ### Comparison Operators
 
@@ -390,6 +379,14 @@ WHERE salary > 5000;
 | < | Less than |
 | >= | Greater than or equal to |
 | <= | Less than or equal to |
+
+### WHERE
+
+```sql
+SELECT *
+FROM employees
+WHERE salary > 5000;
+```
 
 ### AND
 
@@ -425,15 +422,13 @@ WHERE NOT department_id = 10;
 
 ### IN
 
-Checks whether a value matches any value in a given list.
+Checks whether a value matches any value in a list.
 
 ```sql
 SELECT *
 FROM employees
 WHERE department_id IN (10, 20, 30);
 ```
-
-**Meaning:** Returns employees belonging to departments 10, 20, or 30.
 
 ### NOT IN
 
@@ -445,9 +440,11 @@ FROM employees
 WHERE department_id NOT IN (10, 20);
 ```
 
+**Caution:** If a `NOT IN` subquery returns NULL, the comparison can produce UNKNOWN and return no rows. `NOT EXISTS` is often safer for anti-join logic.
+
 ### BETWEEN
 
-Checks whether a value falls within an inclusive range.
+Checks an inclusive range.
 
 ```sql
 SELECT *
@@ -455,21 +452,11 @@ FROM employees
 WHERE salary BETWEEN 5000 AND 10000;
 ```
 
-**Meaning:** Includes salaries equal to 5000 and 10000.
-
-### NOT BETWEEN
-
-Excludes values within a specified range.
-
-```sql
-SELECT *
-FROM employees
-WHERE salary NOT BETWEEN 5000 AND 10000;
-```
+Both 5000 and 10000 are included.
 
 ### LIKE
 
-Searches for a specific pattern in a string.
+Searches for a text pattern.
 
 ```sql
 SELECT *
@@ -477,20 +464,19 @@ FROM employees
 WHERE first_name LIKE 'A%';
 ```
 
-**Common Wildcards**
-
 | Pattern | Meaning |
 |---|---|
-| 'A%' | Starts with A |
-| '%A' | Ends with A |
-| '%A%' | Contains A |
-| 'A_' | A followed by exactly one character |
-| '_A%' | Second character is A |
-| 'A%B' | Starts with A and ends with B |
+| `'A%'` | Starts with A |
+| `'%A'` | Ends with A |
+| `'%A%'` | Contains A |
+| `'A_'` | A followed by exactly one character |
+| `'_A%'` | Second character is A |
+| `'A%B'` | Starts with A and ends with B |
+
+- `%` matches zero or more characters.
+- `_` matches exactly one character.
 
 ### NOT LIKE
-
-Excludes values matching a specified pattern.
 
 ```sql
 SELECT *
@@ -500,8 +486,6 @@ WHERE first_name NOT LIKE 'A%';
 
 ### IS NULL
 
-Checks whether a column contains NULL.
-
 ```sql
 SELECT *
 FROM employees
@@ -510,21 +494,31 @@ WHERE manager_id IS NULL;
 
 ### IS NOT NULL
 
-Returns records where a column has a non-NULL value.
-
 ```sql
 SELECT *
 FROM employees
 WHERE manager_id IS NOT NULL;
 ```
 
+### EXISTS in a Condition
+
+```sql
+SELECT *
+FROM employees e
+WHERE EXISTS (
+    SELECT 1
+    FROM departments d
+    WHERE d.department_id = e.department_id
+);
+```
+
 ---
 
-# 6. Sorting and Limiting
+# 7. Sorting and Fetching Rows
 
 ### ORDER BY ASC
 
-Sorts results in ascending order.
+Sorts from lowest to highest or alphabetically ascending.
 
 ```sql
 SELECT *
@@ -532,11 +526,9 @@ FROM employees
 ORDER BY salary ASC;
 ```
 
-**Meaning:** Lowest salary appears first.
-
 ### ORDER BY DESC
 
-Sorts results in descending order.
+Sorts from highest to lowest.
 
 ```sql
 SELECT *
@@ -544,11 +536,7 @@ FROM employees
 ORDER BY salary DESC;
 ```
 
-**Meaning:** Highest salary appears first.
-
 ### Multiple Column Sorting
-
-Sorts by one column first and uses another column to break ties.
 
 ```sql
 SELECT *
@@ -556,68 +544,105 @@ FROM employees
 ORDER BY department_id ASC, salary DESC;
 ```
 
-### LIMIT
+### FETCH FIRST
 
-Restricts the number of returned rows.
-
-```sql
-SELECT *
-FROM employees
-LIMIT 5;
-```
-
-**Meaning:** Returns only the first five rows.
-
-### LIMIT with OFFSET
-
-Skips a specified number of rows before returning results.
-
-```sql
-SELECT *
-FROM employees
-LIMIT 5 OFFSET 10;
-```
-
-**Meaning:** Skips the first 10 rows and returns the next 5.
-
-### Find the Highest Salary
+Returns a limited number of rows. Supported in Oracle 12c and later.
 
 ```sql
 SELECT *
 FROM employees
 ORDER BY salary DESC
-LIMIT 1;
+FETCH FIRST 5 ROWS ONLY;
 ```
 
-### Find the Second Highest Salary
+### OFFSET and FETCH
+
+Skips rows and returns the next specified number.
+
+```sql
+SELECT *
+FROM employees
+ORDER BY employee_id
+OFFSET 10 ROWS
+FETCH NEXT 5 ROWS ONLY;
+```
+
+### WITH TIES
+
+Includes additional rows tied with the last fetched row according to the ORDER BY keys.
+
+```sql
+SELECT *
+FROM employees
+ORDER BY salary DESC
+FETCH FIRST 5 ROWS WITH TIES;
+```
+
+### Find the Highest Salary
+
+```sql
+SELECT MAX(salary)
+FROM employees;
+```
+
+Or retrieve the employee row:
+
+```sql
+SELECT *
+FROM employees
+ORDER BY salary DESC
+FETCH FIRST 1 ROW ONLY;
+```
+
+### Find the Second Highest Distinct Salary
 
 ```sql
 SELECT DISTINCT salary
 FROM employees
 ORDER BY salary DESC
-LIMIT 1 OFFSET 1;
+OFFSET 1 ROW
+FETCH NEXT 1 ROW ONLY;
+```
+
+**Older Oracle versions:** Use `ROWNUM` with an ordered inline view when the row-limiting clause is unavailable.
+
+```sql
+SELECT *
+FROM (
+    SELECT *
+    FROM employees
+    ORDER BY salary DESC
+)
+WHERE ROWNUM <= 5;
 ```
 
 ---
 
-# 7. Aggregate Functions
+# 8. Aggregate Functions
 
-Aggregate functions perform calculations on multiple rows and return a single result.
+Aggregate functions calculate a result from multiple rows.
 
-### COUNT()
+### COUNT(*)
 
-Counts the number of rows.
+Counts all rows.
 
 ```sql
 SELECT COUNT(*)
 FROM employees;
 ```
 
-**COUNT(*) vs COUNT(column)**
+### COUNT(column)
 
-- COUNT(*) counts all rows.
-- COUNT(column) counts only non-NULL values in that column.
-- COUNT(DISTINCT column) counts unique non-NULL values.
+Counts non-NULL values.
+
+```sql
+SELECT COUNT(commission_pct)
+FROM employees;
+```
+
+### COUNT(DISTINCT column)
+
+Counts unique non-NULL values.
 
 ```sql
 SELECT COUNT(DISTINCT department_id)
@@ -626,39 +651,39 @@ FROM employees;
 
 ### SUM()
 
-Returns the sum of numeric values.
-
 ```sql
 SELECT SUM(salary)
 FROM employees;
 ```
 
-### AVG()
+Returns the total salary.
 
-Calculates the average of non-NULL numeric values.
+### AVG()
 
 ```sql
 SELECT AVG(salary)
 FROM employees;
 ```
 
-### MIN()
+Calculates the average of non-NULL values.
 
-Returns the smallest value.
+### MIN()
 
 ```sql
 SELECT MIN(salary)
 FROM employees;
 ```
 
-### MAX()
+Returns the smallest value.
 
-Returns the largest value.
+### MAX()
 
 ```sql
 SELECT MAX(salary)
 FROM employees;
 ```
+
+Returns the largest value.
 
 ### Multiple Aggregate Functions
 
@@ -674,11 +699,11 @@ FROM employees;
 
 ---
 
-# 8. GROUP BY and HAVING
+# 9. GROUP BY and HAVING
 
-## GROUP BY
+### GROUP BY
 
-Groups rows having the same values in specified columns.
+Groups rows that have the same values in the specified columns.
 
 ```sql
 SELECT department_id, COUNT(*) AS total_employees
@@ -686,21 +711,21 @@ FROM employees
 GROUP BY department_id;
 ```
 
-**Meaning:** Creates one group per department and counts the employees in each group.
+**Meaning:** Creates one group per department and counts employees in each group.
 
-### Multiple Column GROUP BY
+### GROUP BY Multiple Columns
 
 ```sql
-SELECT department_id, job_id, COUNT(*)
+SELECT department_id, job_id, COUNT(*) AS total
 FROM employees
 GROUP BY department_id, job_id;
 ```
 
-**Meaning:** Groups records using unique combinations of department_id and job_id.
+Groups by each unique combination of department_id and job_id.
 
-## HAVING
+### HAVING
 
-Filters groups after GROUP BY is performed.
+Filters groups after grouping.
 
 ```sql
 SELECT department_id, AVG(salary) AS avg_salary
@@ -709,40 +734,39 @@ GROUP BY department_id
 HAVING AVG(salary) > 8000;
 ```
 
-**Meaning:** Displays only departments whose average salary exceeds 8000.
+**Meaning:** Displays departments whose average salary is greater than 8000.
 
-## WHERE vs HAVING
+### WHERE vs HAVING
 
 | WHERE | HAVING |
 |---|---|
-| Filters individual rows | Filters grouped results |
+| Filters individual rows | Filters groups |
 | Applied before GROUP BY | Applied after GROUP BY |
-| Generally used without aggregate conditions | Commonly used with aggregate conditions |
-| Cannot directly filter aggregate results | Can filter aggregate results |
+| Filters source records | Filters aggregate results |
+| Cannot use aggregate functions directly in its condition | Commonly uses aggregate functions |
 
 ### WHERE and HAVING Together
 
 ```sql
-SELECT department_id, AVG(salary)
+SELECT department_id, AVG(salary) AS avg_salary
 FROM employees
 WHERE salary > 3000
 GROUP BY department_id
 HAVING AVG(salary) > 8000;
 ```
 
-**Execution:**
 1. WHERE removes employees earning 3000 or less.
-2. GROUP BY groups remaining employees by department.
-3. AVG calculates the average salary.
-4. HAVING retains departments with average salary above 8000.
+2. GROUP BY groups the remaining employees by department.
+3. AVG calculates each department's average.
+4. HAVING retains departments with an average above 8000.
 
 ---
 
-# 9. CASE WHEN
+# 10. CASE Expressions
 
-CASE WHEN provides conditional logic in SQL, similar to if-else statements in programming languages.
+`CASE` provides conditional logic similar to if-else statements.
 
-### Basic CASE WHEN
+### Searched CASE
 
 ```sql
 SELECT
@@ -769,7 +793,23 @@ SELECT
 FROM employees;
 ```
 
-### CASE WHEN with GROUP BY
+### Simple CASE
+
+Compares one expression against multiple values.
+
+```sql
+SELECT
+    department_id,
+    CASE department_id
+        WHEN 10 THEN 'HR'
+        WHEN 20 THEN 'IT'
+        WHEN 30 THEN 'Finance'
+        ELSE 'Other'
+    END AS department_name
+FROM employees;
+```
+
+### CASE with GROUP BY
 
 ```sql
 SELECT
@@ -784,7 +824,7 @@ FROM employees
 GROUP BY department_id;
 ```
 
-**Meaning:** Counts employees earning more than 5000 in each department.
+Counts employees earning more than 5000 in each department.
 
 ### Conditional Aggregation
 
@@ -797,37 +837,38 @@ FROM employees;
 
 ---
 
-# 10. Data Manipulation (DML)
+# 11. Data Manipulation
 
 ## INSERT
 
-Adds new records to a table.
+Adds records to a table.
 
 ### Insert One Record
 
 ```sql
-INSERT INTO employees
-(employee_id, first_name, salary)
+INSERT INTO employees (employee_id, first_name, salary)
 VALUES (101, 'Piyush', 8000);
 ```
 
 ### Insert Multiple Records
 
+Oracle supports multi-row insertion using `INSERT ALL`.
+
 ```sql
-INSERT INTO employees
-(employee_id, first_name, salary)
-VALUES
-(102, 'Amit', 7000),
-(103, 'Rahul', 9000);
+INSERT ALL
+    INTO employees (employee_id, first_name, salary)
+    VALUES (102, 'Amit', 7000)
+    INTO employees (employee_id, first_name, salary)
+    VALUES (103, 'Rahul', 9000)
+SELECT 1 FROM dual;
 ```
 
 ### INSERT INTO SELECT
 
-Copies records from one table into another.
+Copies rows from one table into another.
 
 ```sql
-INSERT INTO employee_backup
-(employee_id, first_name, salary)
+INSERT INTO employee_backup (employee_id, first_name, salary)
 SELECT employee_id, first_name, salary
 FROM employees;
 ```
@@ -851,34 +892,59 @@ SET salary = 12000,
 WHERE employee_id = 101;
 ```
 
-**Important:** Always use WHERE when you intend to update specific records. Without WHERE, all rows are updated.
+**Important:** Without WHERE, every row is updated.
 
 ## DELETE
 
-Removes selected records.
+Removes selected rows.
 
 ```sql
 DELETE FROM employees
 WHERE employee_id = 101;
 ```
 
-### Delete All Records
+### Delete All Rows
 
 ```sql
 DELETE FROM employees;
 ```
 
-**Important:** DELETE without WHERE removes all rows but retains the table structure.
+The table structure remains.
+
+## MERGE
+
+Performs an INSERT or UPDATE depending on whether a matching row exists. This is often called an upsert.
+
+```sql
+MERGE INTO employee_target t
+USING employee_source s
+ON (t.employee_id = s.employee_id)
+WHEN MATCHED THEN
+    UPDATE SET t.salary = s.salary
+WHEN NOT MATCHED THEN
+    INSERT (employee_id, salary)
+    VALUES (s.employee_id, s.salary);
+```
+
+## DELETE vs TRUNCATE vs DROP
+
+| Command | Meaning |
+|---|---|
+| DELETE | Removes selected or all rows; supports WHERE |
+| TRUNCATE | Removes all rows; does not support WHERE |
+| DROP | Removes the table object itself |
+
+**Oracle note:** DDL statements such as TRUNCATE, DROP, and CREATE cause implicit commits. Do not expect to roll them back like ordinary uncommitted DML.
 
 ---
 
-# 11. Joins
+# 12. Joins
 
-Joins combine records from two or more tables using a related column.
+Joins combine rows from two or more tables using related columns.
 
-Assume:
+Assume these tables:
 
-**Table 1: employees**
+### employees
 
 | employee_id | name | department_id |
 |---|---|---|
@@ -887,7 +953,7 @@ Assume:
 | 3 | Piyush | 30 |
 | 4 | Neha | NULL |
 
-**Table 2: departments**
+### departments
 
 | department_id | department_name |
 |---|---|
@@ -895,9 +961,9 @@ Assume:
 | 20 | IT |
 | 40 | Finance |
 
-## 11.1 INNER JOIN
+## 12.1 INNER JOIN
 
-Returns only matching records from both tables.
+Returns only rows with matching values in both tables.
 
 ```sql
 SELECT *
@@ -909,13 +975,13 @@ ON e.department_id = d.department_id;
 **Meaning:**
 - Takes matching rows from the first table.
 - Takes matching rows from the second table.
-- Rows without a match in either table are excluded.
+- Unmatched rows from either table are excluded.
 
-**Result:** Amit and Rahul are returned. Piyush and Neha are excluded because their department IDs have no matching department record.
+**Result:** Amit and Rahul appear. Piyush and Neha do not have matching departments.
 
-## 11.2 LEFT JOIN (LEFT OUTER JOIN)
+## 12.2 LEFT JOIN / LEFT OUTER JOIN
 
-Returns all records from the LEFT table and only matching records from the RIGHT table.
+Returns every row from the left table and matching rows from the right table.
 
 ```sql
 SELECT *
@@ -925,15 +991,15 @@ ON e.department_id = d.department_id;
 ```
 
 **Meaning:**
-- Takes ALL rows from the first table (employees).
-- Takes only matching rows from the second table (departments).
-- If a row from the first table has no match, the second table's columns contain NULL.
+- Takes ALL rows from the first table (`employees`).
+- Takes only matching rows from the second table (`departments`).
+- If there is no match, columns from the right table contain NULL.
 
-**Result:** All four employees are returned. Piyush and Neha have NULL department details.
+**Result:** All four employees appear. Piyush and Neha have NULL department details.
 
-## 11.3 RIGHT JOIN (RIGHT OUTER JOIN)
+## 12.3 RIGHT JOIN / RIGHT OUTER JOIN
 
-Returns all records from the RIGHT table and only matching records from the LEFT table.
+Returns every row from the right table and matching rows from the left table.
 
 ```sql
 SELECT *
@@ -943,39 +1009,26 @@ ON e.department_id = d.department_id;
 ```
 
 **Meaning:**
-- Takes ALL rows from the second table (departments).
-- Takes only matching rows from the first table (employees).
-- If a department has no matching employee, employee columns contain NULL.
+- Takes ALL rows from the second table (`departments`).
+- Takes only matching rows from the first table (`employees`).
+- If there is no match, columns from the left table contain NULL.
 
-**Result:** HR, IT, and Finance are returned. Finance has NULL employee details.
+**Result:** HR, IT, and Finance appear. Finance has NULL employee details.
 
-## 11.4 FULL OUTER JOIN
+## 12.4 FULL OUTER JOIN
 
-Returns all records from both tables, matching rows where possible.
+Returns all rows from both tables. Matching rows are combined; unmatched columns are NULL.
 
 ```sql
 SELECT *
 FROM employees e
-LEFT JOIN departments d
-ON e.department_id = d.department_id
-
-UNION
-
-SELECT *
-FROM employees e
-RIGHT JOIN departments d
+FULL OUTER JOIN departments d
 ON e.department_id = d.department_id;
 ```
 
-**Meaning:**
-- Returns all rows from the first table.
-- Returns all rows from the second table.
-- Matches related records.
-- Unmatched columns are filled with NULL.
+Unlike MySQL, Oracle supports FULL OUTER JOIN directly.
 
-**Note:** MySQL does not directly support FULL OUTER JOIN. The above UNION approach simulates it.
-
-## 11.5 CROSS JOIN
+## 12.5 CROSS JOIN
 
 Returns every possible combination of rows from both tables.
 
@@ -985,13 +1038,11 @@ FROM employees
 CROSS JOIN departments;
 ```
 
-**Meaning:** If the first table has 4 rows and the second table has 3 rows, the result contains 12 rows.
+If the first table has 4 rows and the second has 3 rows, the result has 12 rows.
 
-## 11.6 SELF JOIN
+## 12.6 SELF JOIN
 
-Joins a table with itself.
-
-Useful when records in the same table are related, such as employees and their managers.
+Joins a table with itself. Useful for employee-manager relationships.
 
 ```sql
 SELECT
@@ -1002,14 +1053,11 @@ JOIN employees m
 ON e.manager_id = m.employee_id;
 ```
 
-**Meaning:**
 - `e` represents the employee.
 - `m` represents the manager.
-- Both aliases refer to the same employees table.
+- Both aliases refer to the same table.
 
-## 11.7 Multiple JOINs
-
-Joins more than two tables in a single query.
+## 12.7 Multiple JOINs
 
 ```sql
 SELECT
@@ -1018,30 +1066,26 @@ SELECT
     l.city
 FROM employees e
 JOIN departments d
-ON e.department_id = d.department_id
+    ON e.department_id = d.department_id
 JOIN locations l
-ON d.location_id = l.location_id;
+    ON d.location_id = l.location_id;
 ```
 
-**Meaning:** Combines employee, department, and location information.
+Combines information from employees, departments, and locations.
 
-## 11.8 JOIN with WHERE
-
-Filters joined records.
+## 12.8 JOIN with WHERE
 
 ```sql
-SELECT
-    e.first_name,
-    d.department_name
+SELECT e.first_name, d.department_name
 FROM employees e
 JOIN departments d
 ON e.department_id = d.department_id
 WHERE d.department_name = 'IT';
 ```
 
-## 11.9 LEFT JOIN with IS NULL
+## 12.9 LEFT JOIN with IS NULL
 
-Finds records in the first table that have no matching record in the second table.
+Finds rows in the left table with no matching row in the right table.
 
 ```sql
 SELECT e.*
@@ -1051,9 +1095,9 @@ ON e.department_id = d.department_id
 WHERE d.department_id IS NULL;
 ```
 
-**Meaning:** Finds employees whose department does not exist in the departments table, including employees with a NULL department_id.
+This includes employees with a NULL department_id as well as employees whose department_id has no match.
 
-**Find departments without employees:**
+### Find Departments Without Employees
 
 ```sql
 SELECT d.*
@@ -1076,95 +1120,70 @@ WHERE e.employee_id IS NULL;
 
 ---
 
-# 12. Set Operations
+# 13. Set Operators
 
-Set operations combine the results of multiple SELECT statements.
-
-The SELECT statements must return the same number of columns with compatible data types.
+Set operators combine the results of SELECT statements. The queries must return the same number of columns, in compatible data types and corresponding positions.
 
 ## UNION
 
 Combines results and removes duplicate rows.
 
 ```sql
-SELECT department_id
-FROM employees
-
+SELECT department_id FROM employees
 UNION
-
-SELECT department_id
-FROM departments;
+SELECT department_id FROM departments;
 ```
-
-**Meaning:** Combines both results and keeps only unique values.
 
 ## UNION ALL
 
-Combines results without removing duplicates.
+Combines results and retains duplicates.
 
 ```sql
-SELECT department_id
-FROM employees
-
+SELECT department_id FROM employees
 UNION ALL
-
-SELECT department_id
-FROM departments;
+SELECT department_id FROM departments;
 ```
-
-**Meaning:** Returns all rows, including duplicates.
 
 ## INTERSECT
 
 Returns rows common to both query results.
 
 ```sql
-SELECT department_id
-FROM employees
-
+SELECT department_id FROM employees
 INTERSECT
-
-SELECT department_id
-FROM departments;
+SELECT department_id FROM departments;
 ```
 
-**Note:** Supported in MySQL 8.0.31 and later.
+## MINUS
 
-## EXCEPT
-
-Returns rows present in the first query but absent from the second query.
+Returns rows from the first query that do not appear in the second query.
 
 ```sql
-SELECT department_id
-FROM departments
-
-EXCEPT
-
-SELECT department_id
-FROM employees;
+SELECT department_id FROM departments
+MINUS
+SELECT department_id FROM employees;
 ```
 
-**Note:** Supported in MySQL 8.0.31 and later.
+### Set Operator Comparison
 
-### UNION vs UNION ALL
-
-| UNION | UNION ALL |
+| Operator | Meaning |
 |---|---|
-| Removes duplicates | Keeps duplicates |
-| Performs duplicate elimination | Does not perform duplicate elimination |
-| Usually slower | Usually faster |
+| UNION | Combines results and removes duplicates |
+| UNION ALL | Combines results and keeps duplicates |
+| INTERSECT | Returns common rows |
+| MINUS | Returns rows in the first query but not the second |
+
+**Note:** Oracle uses `MINUS` for this operation in widely used versions. Check the syntax supported by your exact Oracle Database release before using newer alternatives.
 
 ---
 
-# 13. Subqueries
+# 14. Subqueries
 
-A subquery is a query written inside another SQL query.
+A subquery is a query nested inside another SQL statement.
 
-It is used when the result of one query is needed by another query.
+## 14.1 Single-Row Subquery
 
-## 13.1 Single Row Subquery
-
-Returns one row and one value.
+Returns one row. Common comparison operators include `=`, `>`, `<`, `>=`, and `<=`.
 
 ```sql
 SELECT first_name, salary
@@ -1175,11 +1194,11 @@ WHERE salary > (
 );
 ```
 
-**Meaning:** Finds employees earning more than the company's average salary.
+**Meaning:** Finds employees earning more than the company average.
 
-## 13.2 Multiple Row Subquery
+## 14.2 Multiple-Row Subquery
 
-Returns multiple rows. Commonly used with IN, ANY, and ALL.
+Returns multiple rows. Use operators such as IN, ANY, and ALL.
 
 ```sql
 SELECT first_name
@@ -1191,11 +1210,9 @@ WHERE department_id IN (
 );
 ```
 
-**Meaning:** Finds employees working in departments located at location 1700.
+## 14.3 Scalar Subquery
 
-## 13.3 Scalar Subquery
-
-Returns a single value that can be used in a SELECT list or expression.
+Returns one value and can be used in a SELECT list or expression.
 
 ```sql
 SELECT
@@ -1205,7 +1222,7 @@ SELECT
 FROM employees;
 ```
 
-## 13.4 Multiple Column Subquery
+## 14.4 Multiple-Column Subquery
 
 Returns multiple columns.
 
@@ -1219,9 +1236,9 @@ WHERE (department_id, job_id) IN (
 );
 ```
 
-## 13.5 Correlated Subquery
+## 14.5 Correlated Subquery
 
-A correlated subquery depends on the outer query and executes logically for each outer row.
+References a column from the outer query.
 
 ```sql
 SELECT e.first_name, e.salary, e.department_id
@@ -1235,9 +1252,9 @@ WHERE e.salary > (
 
 **Meaning:** Finds employees earning more than the average salary of their own department.
 
-## 13.6 Subquery with FROM
+## 14.6 Subquery in FROM
 
-Uses a subquery as a temporary derived table.
+Uses a subquery as an inline view.
 
 ```sql
 SELECT *
@@ -1245,13 +1262,13 @@ FROM (
     SELECT department_id, AVG(salary) AS avg_salary
     FROM employees
     GROUP BY department_id
-) AS dept_summary
+) dept_summary
 WHERE avg_salary > 8000;
 ```
 
-## 13.7 ANY
+## 14.7 ANY
 
-Compares a value with at least one value returned by a subquery.
+The comparison must be true for at least one value returned by the subquery.
 
 ```sql
 SELECT *
@@ -1263,11 +1280,9 @@ WHERE salary > ANY (
 );
 ```
 
-**Meaning:** Returns employees whose salary is greater than at least one salary in department 20.
+## 14.8 ALL
 
-## 13.8 ALL
-
-Compares a value with every value returned by a subquery.
+The comparison must be true for every value returned by the subquery.
 
 ```sql
 SELECT *
@@ -1279,18 +1294,16 @@ WHERE salary > ALL (
 );
 ```
 
-**Meaning:** Returns employees whose salary is greater than every salary in department 20.
-
 ### ANY vs ALL
 
 | ANY | ALL |
 |---|---|
-| At least one condition must be true | Every comparison must be true |
-| Similar to OR | Similar to AND |
+| At least one comparison must be true | Every comparison must be true |
+| Similar to OR logic | Similar to AND logic |
 
 ---
 
-# 14. EXISTS and NOT EXISTS
+# 15. EXISTS and NOT EXISTS
 
 ## EXISTS
 
@@ -1328,18 +1341,18 @@ WHERE NOT EXISTS (
 
 | EXISTS | IN |
 |---|---|
-| Checks whether matching rows exist | Checks whether a value belongs to a returned list |
-| Commonly used with correlated subqueries | Commonly used with single-column subqueries |
-| Can stop searching after finding a match | Compares against the subquery result |
-| Handles NULL-related situations differently from NOT IN | NOT IN can behave unexpectedly when its list contains NULL |
+| Tests whether matching rows exist | Tests membership in a list or subquery result |
+| Often used with correlated subqueries | Often used with a list or single-column subquery |
+| Useful for existence checks | Useful for value comparisons |
+| Usually unaffected by NULL values in the selected subquery column when checking a matching predicate | `NOT IN` can behave unexpectedly if the subquery returns NULL |
 
 ---
 
-# 15. Common Table Expressions (CTEs)
+# 16. Common Table Expressions (CTEs)
 
-A CTE creates a temporary named result set that can be referenced within a single SQL statement.
+A CTE creates a named result set available to the statement that follows it.
 
-## Basic CTE
+### Basic CTE
 
 ```sql
 WITH dept_summary AS (
@@ -1347,15 +1360,12 @@ WITH dept_summary AS (
     FROM employees
     GROUP BY department_id
 )
-
 SELECT *
 FROM dept_summary
 WHERE avg_salary > 8000;
 ```
 
-**Meaning:** Calculates average salary per department and then filters the result.
-
-## Multiple CTEs
+### Multiple CTEs
 
 ```sql
 WITH
@@ -1369,7 +1379,6 @@ dept_count AS (
     FROM employees
     GROUP BY department_id
 )
-
 SELECT
     a.department_id,
     a.avg_salary,
@@ -1379,36 +1388,42 @@ JOIN dept_count c
 ON a.department_id = c.department_id;
 ```
 
-## Recursive CTE
+### Recursive Subquery Factoring
 
-A recursive CTE references itself to process hierarchical or sequential data.
+Oracle supports recursive subquery factoring. Unlike MySQL and some other systems, Oracle does **not** put the keyword `RECURSIVE` after `WITH`.
 
 ```sql
-WITH RECURSIVE numbers AS (
-    SELECT 1 AS n
-
+WITH numbers (n) AS (
+    SELECT 1 FROM dual
     UNION ALL
-
     SELECT n + 1
     FROM numbers
     WHERE n < 10
 )
-
-SELECT *
+SELECT n
 FROM numbers;
 ```
 
-**Meaning:** Generates numbers from 1 to 10.
+This generates numbers from 1 to 10.
+
+For hierarchical data, Oracle also provides `START WITH ... CONNECT BY`.
+
+```sql
+SELECT employee_id, manager_id, LEVEL
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+```
 
 ---
 
-# 16. Window Functions
+# 17. Window and Analytic Functions
 
-Window functions perform calculations across related rows without collapsing them into a single row like GROUP BY.
+Oracle commonly calls window functions **analytic functions**. They calculate across related rows without collapsing the result into one row per group.
 
 ## OVER()
 
-Defines the window of rows used by a window function.
+Defines the analytic window.
 
 ```sql
 SELECT
@@ -1418,11 +1433,11 @@ SELECT
 FROM employees;
 ```
 
-**Meaning:** Displays every employee along with the company's average salary.
+Displays every employee alongside the company-wide average salary.
 
 ## PARTITION BY
 
-Divides rows into groups for window calculations without removing individual rows.
+Divides rows into groups for the analytic calculation without removing individual rows.
 
 ```sql
 SELECT
@@ -1435,11 +1450,11 @@ SELECT
 FROM employees;
 ```
 
-**Meaning:** Calculates the average salary separately for each department.
+Calculates the average salary separately for each department.
 
 ## ORDER BY inside OVER()
 
-Defines the order in which rows are processed within the window.
+Defines the order used by the analytic function.
 
 ```sql
 SELECT
@@ -1447,11 +1462,12 @@ SELECT
     salary,
     SUM(salary) OVER(
         ORDER BY employee_id
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS running_total
 FROM employees;
 ```
 
-**Meaning:** Calculates a running total of salaries.
+Calculates a running total.
 
 ## Running Average
 
@@ -1480,8 +1496,6 @@ SELECT
 FROM employees;
 ```
 
-**Meaning:** Displays the salary of the previous employee in the specified ordering.
-
 ## LEAD()
 
 Accesses a value from a following row.
@@ -1498,7 +1512,7 @@ FROM employees;
 
 ## FIRST_VALUE()
 
-Returns the first value in a window.
+Returns the first value in the analytic window.
 
 ```sql
 SELECT
@@ -1528,17 +1542,17 @@ SELECT
 FROM employees;
 ```
 
-**Note:** LAST_VALUE depends on the window frame. Without an appropriate frame, it may return the current row's value rather than the final value in the partition.
+**Note:** The window frame matters. Without an appropriate frame, LAST_VALUE may return the current row's value rather than the last value in the entire partition.
 
 ---
 
-# 17. Ranking Functions
+# 18. Ranking Functions
 
-Ranking functions assign a rank to rows based on specified ordering.
+Ranking functions assign row numbers or ranks based on ordering.
 
 ## ROW_NUMBER()
 
-Assigns a unique sequential number to each row.
+Assigns a unique sequential number to every row.
 
 ```sql
 SELECT
@@ -1550,7 +1564,7 @@ SELECT
 FROM employees;
 ```
 
-**Meaning:** Assigns 1, 2, 3, 4... even when salaries are tied.
+If salaries tie, rows still receive different row numbers. Add a second ORDER BY column for deterministic ordering.
 
 ## RANK()
 
@@ -1566,11 +1580,11 @@ SELECT
 FROM employees;
 ```
 
-**Example:** 1, 2, 2, 4.
+Example: `1, 2, 2, 4`.
 
 ## DENSE_RANK()
 
-Assigns the same rank to tied values without skipping subsequent rank numbers.
+Assigns the same rank to tied values without skipping subsequent ranks.
 
 ```sql
 SELECT
@@ -1582,7 +1596,7 @@ SELECT
 FROM employees;
 ```
 
-**Example:** 1, 2, 2, 3.
+Example: `1, 2, 2, 3`.
 
 ## NTILE()
 
@@ -1598,39 +1612,36 @@ SELECT
 FROM employees;
 ```
 
-**Meaning:** Divides employees into four salary groups.
+Divides employees into four groups.
 
-## Ranking Comparison
+### Ranking Comparison
 
 | Function | Ties | Skips Rank |
 |---|---|---|
-| ROW_NUMBER() | Unique numbers | No |
+| ROW_NUMBER() | Gives unique numbers | No |
 | RANK() | Same rank | Yes |
 | DENSE_RANK() | Same rank | No |
-| NTILE(n) | Divides into groups | Not a ranking function in the traditional sense |
+| NTILE(n) | Divides rows into buckets | Not a traditional ranking function |
 
-## Find the Second Highest Salary Using DENSE_RANK
+### Second Highest Distinct Salary
 
 ```sql
-WITH ranked_salary AS (
+SELECT salary
+FROM (
     SELECT
-        first_name,
         salary,
-        DENSE_RANK() OVER(
-            ORDER BY salary DESC
-        ) AS rnk
+        DENSE_RANK() OVER(ORDER BY salary DESC) AS rnk
     FROM employees
 )
-
-SELECT *
-FROM ranked_salary
-WHERE rnk = 2;
+WHERE rnk = 2
+GROUP BY salary;
 ```
 
-## Find Top 3 Salaries in Each Department
+### Top 3 Salaries in Each Department
 
 ```sql
-WITH ranked_employees AS (
+SELECT *
+FROM (
     SELECT
         first_name,
         salary,
@@ -1641,44 +1652,12 @@ WITH ranked_employees AS (
         ) AS rnk
     FROM employees
 )
-
-SELECT *
-FROM ranked_employees
 WHERE rnk <= 3;
 ```
 
 ---
 
-# 18. String Functions
-
-String functions manipulate text values.
-
-### CONCAT()
-
-Combines two or more strings.
-
-```sql
-SELECT CONCAT(first_name, ' ', last_name)
-FROM employees;
-```
-
-### LENGTH()
-
-Returns the length of a string in bytes in MySQL.
-
-```sql
-SELECT LENGTH(first_name)
-FROM employees;
-```
-
-### CHAR_LENGTH()
-
-Returns the number of characters in a string.
-
-```sql
-SELECT CHAR_LENGTH(first_name)
-FROM employees;
-```
+# 19. String Functions
 
 ### UPPER()
 
@@ -1698,57 +1677,69 @@ SELECT LOWER(first_name)
 FROM employees;
 ```
 
-### SUBSTRING()
+### INITCAP()
+
+Converts the first letter of each word to uppercase.
+
+```sql
+SELECT INITCAP('hello oracle sql')
+FROM dual;
+```
+
+### LENGTH()
+
+Returns the number of characters.
+
+```sql
+SELECT LENGTH(first_name)
+FROM employees;
+```
+
+### SUBSTR()
 
 Extracts part of a string.
 
 ```sql
-SELECT SUBSTRING(first_name, 1, 3)
+SELECT SUBSTR(first_name, 1, 3)
 FROM employees;
 ```
 
-**Meaning:** Returns the first three characters.
+Returns three characters starting at position 1. Oracle string positions are 1-based.
 
-### LEFT()
+### INSTR()
 
-Extracts characters from the left side.
-
-```sql
-SELECT LEFT(first_name, 3)
-FROM employees;
-```
-
-### RIGHT()
-
-Extracts characters from the right side.
+Returns the position of a substring.
 
 ```sql
-SELECT RIGHT(first_name, 3)
-FROM employees;
+SELECT INSTR('Hello World', 'World')
+FROM dual;
 ```
 
 ### TRIM()
 
-Removes leading and trailing spaces.
+Removes leading and trailing characters, spaces by default.
 
 ```sql
-SELECT TRIM('  Piyush  ');
+SELECT TRIM('  Piyush  ')
+FROM dual;
 ```
 
 ### LTRIM()
 
-Removes leading spaces.
+Removes characters from the left.
 
 ```sql
-SELECT LTRIM('  Piyush');
+SELECT LTRIM('   Piyush')
+FROM dual;
 ```
 
 ### RTRIM()
 
-Removes trailing spaces.
+Removes characters from the right.
 
 ```sql
-SELECT RTRIM('Piyush  ');
+SELECT RTRIM('Piyush   ')
+FROM dual;
 ```
 
 ### REPLACE()
@@ -1756,76 +1747,100 @@ SELECT RTRIM('Piyush  ');
 Replaces occurrences of a substring.
 
 ```sql
-SELECT REPLACE('Hello World', 'World', 'SQL');
+SELECT REPLACE('Hello World', 'World', 'Oracle')
+FROM dual;
 ```
 
-### INSTR()
+### CONCAT()
 
-Returns the position of a substring within a string.
+Concatenates two strings.
 
 ```sql
-SELECT INSTR('Hello World', 'World');
+SELECT CONCAT(first_name, last_name)
+FROM employees;
 ```
 
-### REVERSE()
-
-Reverses a string.
+For multiple strings, use `||`:
 
 ```sql
-SELECT REVERSE('SQL');
+SELECT first_name || ' ' || last_name
+FROM employees;
 ```
 
 ### LPAD() and RPAD()
 
-Adds characters to the left or right until a specified length is reached.
+Pads a string to a specified length.
 
 ```sql
-SELECT LPAD('123', 5, '0');
-SELECT RPAD('123', 5, '0');
+SELECT LPAD('123', 5, '0')
+FROM dual;
 ```
+
+```sql
+SELECT RPAD('123', 5, '0')
+FROM dual;
+```
+
+### REVERSE
+
+Oracle does not provide the same built-in `REVERSE()` function available in some other databases. Use a custom function or another appropriate approach if reversal is required.
 
 ---
 
-# 19. Numeric Functions
+# 20. Numeric Functions
 
 ### ABS()
 
 Returns the absolute value.
 
 ```sql
-SELECT ABS(-100);
+SELECT ABS(-100)
+FROM dual;
 ```
 
 ### ROUND()
 
-Rounds a number to a specified number of decimal places.
+Rounds a number.
 
 ```sql
-SELECT ROUND(123.456, 2);
+SELECT ROUND(123.456, 2)
+FROM dual;
+```
+
+### TRUNC()
+
+Truncates a number without rounding.
+
+```sql
+SELECT TRUNC(123.456, 2)
+FROM dual;
 ```
 
 ### CEIL()
 
-Returns the smallest integer greater than or equal to a number.
+Returns the smallest integer greater than or equal to the number.
 
 ```sql
-SELECT CEIL(12.3);
+SELECT CEIL(12.3)
+FROM dual;
 ```
 
 ### FLOOR()
 
-Returns the largest integer less than or equal to a number.
+Returns the largest integer less than or equal to the number.
 
 ```sql
-SELECT FLOOR(12.9);
+SELECT FLOOR(12.9)
+FROM dual;
 ```
 
 ### MOD()
 
-Returns the remainder after division.
+Returns the remainder.
 
 ```sql
-SELECT MOD(10, 3);
+SELECT MOD(10, 3)
+FROM dual;
 ```
 
 ### POWER()
@@ -1833,7 +1848,8 @@ SELECT MOD(10, 3);
 Raises a number to a specified power.
 
 ```sql
-SELECT POWER(2, 3);
+SELECT POWER(2, 3)
+FROM dual;
 ```
 
 ### SQRT()
@@ -1841,119 +1857,187 @@ SELECT POWER(2, 3);
 Returns the square root.
 
 ```sql
-SELECT SQRT(25);
+SELECT SQRT(25)
+FROM dual;
 ```
 
 ---
 
-# 20. Date and Time Functions
+# 21. Date and Time Functions
 
-### NOW()
+Oracle `DATE` stores date and time to seconds. `TIMESTAMP` supports fractional seconds.
 
-Returns the current date and time.
+### SYSDATE
+
+Returns the current date and time from the database server.
 
 ```sql
-SELECT NOW();
+SELECT SYSDATE
+FROM dual;
 ```
 
-### CURDATE()
+### SYSTIMESTAMP
 
-Returns the current date.
+Returns a timestamp with fractional seconds and time zone information.
 
 ```sql
-SELECT CURDATE();
+SELECT SYSTIMESTAMP
+FROM dual;
 ```
 
-### CURTIME()
+### CURRENT_DATE
 
-Returns the current time.
+Returns the current date and time in the session time zone.
 
 ```sql
-SELECT CURTIME();
+SELECT CURRENT_DATE
+FROM dual;
 ```
 
-### YEAR()
+### EXTRACT()
 
-Extracts the year from a date.
+Extracts a year, month, day, or other supported date/time component.
 
 ```sql
-SELECT YEAR(hire_date)
+SELECT EXTRACT(YEAR FROM hire_date)
 FROM employees;
 ```
 
-### MONTH()
-
-Extracts the month.
-
 ```sql
-SELECT MONTH(hire_date)
+SELECT EXTRACT(MONTH FROM hire_date)
 FROM employees;
 ```
 
-### DAY()
+### TO_CHAR()
 
-Extracts the day of the month.
+Converts a date or number to formatted text.
 
 ```sql
-SELECT DAY(hire_date)
+SELECT TO_CHAR(hire_date, 'DD-MM-YYYY')
 FROM employees;
 ```
 
-### DATEDIFF()
+```sql
+SELECT TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS')
+FROM dual;
+```
 
-Returns the difference between two dates in days.
+### TO_DATE()
+
+Converts character data to a DATE using a format mask.
 
 ```sql
-SELECT DATEDIFF(CURDATE(), hire_date)
+SELECT TO_DATE('03-11-2026', 'DD-MM-YYYY')
+FROM dual;
+```
+
+### ADD_MONTHS()
+
+Adds or subtracts months.
+
+```sql
+SELECT ADD_MONTHS(SYSDATE, 3)
+FROM dual;
+```
+
+### MONTHS_BETWEEN()
+
+Returns the number of months between two dates.
+
+```sql
+SELECT MONTHS_BETWEEN(SYSDATE, hire_date)
 FROM employees;
 ```
 
-### DATE_ADD()
+### TRUNC(date)
 
-Adds an interval to a date.
+Removes the time component or truncates to a specified date unit.
 
 ```sql
-SELECT DATE_ADD(CURDATE(), INTERVAL 30 DAY);
+SELECT TRUNC(SYSDATE)
+FROM dual;
 ```
 
-### DATE_SUB()
-
-Subtracts an interval from a date.
+First day of the current month:
 
 ```sql
-SELECT DATE_SUB(CURDATE(), INTERVAL 1 MONTH);
+SELECT TRUNC(SYSDATE, 'MM')
+FROM dual;
 ```
 
-### TIMESTAMPDIFF()
+### LAST_DAY()
 
-Calculates the difference between two date/time values in a specified unit.
+Returns the last day of the month.
 
 ```sql
-SELECT TIMESTAMPDIFF(YEAR, hire_date, CURDATE())
+SELECT LAST_DAY(SYSDATE)
+FROM dual;
+```
+
+### NEXT_DAY()
+
+Returns the next specified weekday.
+
+```sql
+SELECT NEXT_DAY(SYSDATE, 'MONDAY')
+FROM dual;
+```
+
+### Date Arithmetic
+
+Add 7 days:
+
+```sql
+SELECT SYSDATE + 7
+FROM dual;
+```
+
+Subtract 10 days:
+
+```sql
+SELECT SYSDATE - 10
+FROM dual;
+```
+
+Difference between two DATE values is expressed in days:
+
+```sql
+SELECT SYSDATE - hire_date AS days_employed
 FROM employees;
 ```
 
-### DATE_FORMAT()
-
-Formats a date into a string.
+### Find Employees Hired in the Current Year
 
 ```sql
-SELECT DATE_FORMAT(hire_date, '%d-%m-%Y')
-FROM employees;
+SELECT *
+FROM employees
+WHERE hire_date >= TRUNC(SYSDATE, 'YYYY')
+AND hire_date < ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), 12);
 ```
+
+Using a date range avoids applying a function to every hire_date value in the filter.
 
 ---
 
-# 21. NULL Handling
+# 22. NULL Handling
 
-NULL represents missing or unknown data. It is not equivalent to zero or an empty string.
+NULL represents missing or unknown data. It is not the same as zero or an empty string.
 
-### IFNULL()
+### NVL()
 
-Returns an alternative value if the expression is NULL.
+Returns an alternative value when the first expression is NULL.
 
 ```sql
-SELECT IFNULL(commission, 0)
+SELECT NVL(commission_pct, 0)
+FROM employees;
+```
+
+### NVL2()
+
+Returns one value if the expression is not NULL and another if it is NULL.
+
+```sql
+SELECT NVL2(commission_pct, 'Has Commission', 'No Commission')
 FROM employees;
 ```
 
@@ -1962,7 +2046,7 @@ FROM employees;
 Returns the first non-NULL expression.
 
 ```sql
-SELECT COALESCE(commission, bonus, 0)
+SELECT COALESCE(commission_pct, salary, 0)
 FROM employees;
 ```
 
@@ -1975,14 +2059,15 @@ SELECT NULLIF(salary, 0)
 FROM employees;
 ```
 
-### IF()
-
-Returns one value when a condition is true and another when false. MySQL-specific.
+### CASE for NULL Handling
 
 ```sql
 SELECT
     first_name,
-    IF(salary > 5000, 'High', 'Low') AS category
+    CASE
+        WHEN commission_pct IS NULL THEN 0
+        ELSE commission_pct
+    END AS commission
 FROM employees;
 ```
 
@@ -2000,13 +2085,15 @@ FROM employees
 WHERE manager_id IS NULL;
 ```
 
-**Important:** Comparisons with NULL using `=`, `!=`, or other normal comparison operators produce UNKNOWN rather than TRUE or FALSE.
+Comparisons with NULL using ordinary equality operators produce UNKNOWN, not TRUE or FALSE.
+
+**Oracle-specific note:** Oracle treats a zero-length character string (`''`) as NULL in SQL.
 
 ---
 
-# 22. Indexes
+# 23. Indexes
 
-An index improves data retrieval speed by helping the database locate records efficiently.
+An index helps Oracle locate rows more efficiently. Indexes consume storage and can add overhead to INSERT, UPDATE, and DELETE operations.
 
 ### CREATE INDEX
 
@@ -2017,8 +2104,6 @@ ON employees(salary);
 
 ### UNIQUE INDEX
 
-Prevents duplicate values in the indexed column or combination of columns.
-
 ```sql
 CREATE UNIQUE INDEX idx_email
 ON employees(email);
@@ -2026,48 +2111,69 @@ ON employees(email);
 
 ### Composite Index
 
-Creates an index using multiple columns.
-
 ```sql
 CREATE INDEX idx_dept_salary
 ON employees(department_id, salary);
 ```
 
+The order of columns in a composite index matters. It is generally most useful for queries that filter on the leading column or leading column combination.
+
 ### DROP INDEX
 
-Removes an existing index.
+Oracle syntax does not use `ON table_name` when dropping an index.
 
 ```sql
-DROP INDEX idx_salary
-ON employees;
+DROP INDEX idx_salary;
 ```
 
-### SHOW INDEX
-
-Displays indexes defined on a table.
+### View Indexes
 
 ```sql
-SHOW INDEX FROM employees;
+SELECT index_name, table_name, uniqueness
+FROM user_indexes
+WHERE table_name = 'EMPLOYEES';
 ```
 
-### Types of Indexes
+### View Indexed Columns
+
+```sql
+SELECT index_name, column_name, column_position
+FROM user_ind_columns
+WHERE table_name = 'EMPLOYEES'
+ORDER BY index_name, column_position;
+```
+
+### Common Index Types
 
 | Index | Meaning |
 |---|---|
-| Single-column | Index on one column |
+| B-tree | General-purpose index, common default |
+| Unique | Enforces uniqueness through an index |
 | Composite | Index on multiple columns |
-| Unique | Prevents duplicate indexed values |
-| Primary | Index associated with a primary key |
-| Full-text | Supports text searching |
-| Spatial | Supports spatial data operations |
+| Bitmap | Can be useful for low-cardinality columns in suitable workloads |
+| Function-based | Indexes the result of an expression |
+| Reverse key | Reverses indexed key bytes to reduce certain index block contention patterns |
 
-**Important:** Indexes improve many read operations but consume storage and can slow down INSERT, UPDATE, and DELETE operations because indexes also need maintenance.
+### Function-Based Index
+
+```sql
+CREATE INDEX idx_upper_name
+ON employees(UPPER(first_name));
+```
+
+Can help queries that use the same expression:
+
+```sql
+SELECT *
+FROM employees
+WHERE UPPER(first_name) = 'PIYUSH';
+```
 
 ---
 
-# 23. Views
+# 24. Views
 
-A view is a virtual table based on the result of a SQL query.
+A view is a named query that behaves like a virtual table.
 
 ### CREATE VIEW
 
@@ -2087,8 +2193,6 @@ FROM high_salary_employees;
 
 ### CREATE OR REPLACE VIEW
 
-Creates a view or replaces an existing view definition.
-
 ```sql
 CREATE OR REPLACE VIEW employee_details AS
 SELECT first_name, department_id
@@ -2097,67 +2201,279 @@ FROM employees;
 
 ### DROP VIEW
 
-Deletes a view without deleting the original table data.
-
 ```sql
 DROP VIEW employee_details;
+```
+
+### View Metadata
+
+```sql
+SELECT view_name
+FROM user_views;
 ```
 
 ### Why Use Views?
 
 - Simplifies complex queries.
-- Provides a reusable query structure.
-- Can restrict access to selected columns or rows.
-- Helps organize database logic.
+- Reuses query logic.
+- Can expose only selected rows or columns.
+- Can provide a controlled interface to underlying tables.
+
+**Note:** Not every view is directly updatable. Complex views may require an INSTEAD OF trigger for DML.
 
 ---
 
-# 24. Stored Procedures
+# 25. Sequences and Identity Columns
 
-A stored procedure is a collection of SQL statements stored in the database and executed when called.
+Oracle commonly uses sequences to generate numeric identifiers.
+
+## CREATE SEQUENCE
+
+```sql
+CREATE SEQUENCE employee_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+```
+
+### NEXTVAL
+
+Generates the next sequence value.
+
+```sql
+SELECT employee_seq.NEXTVAL
+FROM dual;
+```
+
+### CURRVAL
+
+Returns the current sequence value in the session, after NEXTVAL has been called in that session.
+
+```sql
+SELECT employee_seq.CURRVAL
+FROM dual;
+```
+
+### Use a Sequence in INSERT
+
+```sql
+INSERT INTO employees (employee_id, first_name)
+VALUES (employee_seq.NEXTVAL, 'Piyush');
+```
+
+### DROP SEQUENCE
+
+```sql
+DROP SEQUENCE employee_seq;
+```
+
+## Identity Column
+
+Oracle 12c and later support identity columns.
+
+```sql
+CREATE TABLE students (
+    student_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    student_name VARCHAR2(50)
+);
+```
+
+Another option:
+
+```sql
+CREATE TABLE students (
+    student_id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    student_name VARCHAR2(50)
+);
+```
+
+- `GENERATED ALWAYS`: Oracle generates the value; explicit values are normally not allowed.
+- `GENERATED BY DEFAULT`: Oracle generates a value when one is not supplied; explicit values can be supplied.
+
+---
+
+# 26. PL/SQL Basics
+
+PL/SQL stands for **Procedural Language extension to SQL**. It adds variables, conditions, loops, exceptions, and procedural programming to SQL.
+
+### Basic PL/SQL Block
+
+```sql
+SET SERVEROUTPUT ON;
+
+DECLARE
+    v_name VARCHAR2(50) := 'Piyush';
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Hello ' || v_name);
+END;
+/
+```
+
+A PL/SQL block contains:
+
+| Section | Purpose |
+|---|---|
+| DECLARE | Optional variable declarations |
+| BEGIN | Starts executable statements |
+| EXCEPTION | Optional error handling |
+| END | Ends the block |
+
+The `/` on a separate line tells SQL Developer's script runner to execute the PL/SQL block.
+
+### Variables
+
+```sql
+DECLARE
+    v_salary NUMBER(10,2) := 5000;
+    v_name VARCHAR2(50) := 'Piyush';
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(v_name);
+    DBMS_OUTPUT.PUT_LINE(v_salary);
+END;
+/
+```
+
+### %TYPE
+
+Declares a variable using the data type of an existing table column.
+
+```sql
+DECLARE
+    v_salary employees.salary%TYPE;
+BEGIN
+    SELECT salary
+    INTO v_salary
+    FROM employees
+    WHERE employee_id = 101;
+
+    DBMS_OUTPUT.PUT_LINE(v_salary);
+END;
+/
+```
+
+### %ROWTYPE
+
+Declares a record with the structure of a table row.
+
+```sql
+DECLARE
+    v_emp employees%ROWTYPE;
+BEGIN
+    SELECT *
+    INTO v_emp
+    FROM employees
+    WHERE employee_id = 101;
+
+    DBMS_OUTPUT.PUT_LINE(v_emp.first_name);
+END;
+/
+```
+
+### IF-ELSIF-ELSE
+
+```sql
+DECLARE
+    v_salary NUMBER := 8000;
+BEGIN
+    IF v_salary >= 10000 THEN
+        DBMS_OUTPUT.PUT_LINE('High');
+    ELSIF v_salary >= 5000 THEN
+        DBMS_OUTPUT.PUT_LINE('Medium');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Low');
+    END IF;
+END;
+/
+```
+
+### Simple LOOP
+
+```sql
+BEGIN
+    FOR i IN 1..5 LOOP
+        DBMS_OUTPUT.PUT_LINE(i);
+    END LOOP;
+END;
+/
+```
+
+### WHILE LOOP
+
+```sql
+DECLARE
+    v_counter NUMBER := 1;
+BEGIN
+    WHILE v_counter <= 5 LOOP
+        DBMS_OUTPUT.PUT_LINE(v_counter);
+        v_counter := v_counter + 1;
+    END LOOP;
+END;
+/
+```
+
+### Basic Exception Handling
+
+```sql
+BEGIN
+    UPDATE employees
+    SET salary = salary * 1.1
+    WHERE employee_id = 101;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No record found');
+    WHEN TOO_MANY_ROWS THEN
+        DBMS_OUTPUT.PUT_LINE('More than one record found');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(SQLERRM);
+END;
+/
+```
+
+`NO_DATA_FOUND` and `TOO_MANY_ROWS` are especially relevant to SELECT INTO statements. An UPDATE statement that affects zero rows does not raise NO_DATA_FOUND.
+
+---
+
+# 27. Stored Procedures
+
+A procedure is a named PL/SQL program stored in the database.
 
 ### CREATE PROCEDURE
 
 ```sql
-DELIMITER //
-
-CREATE PROCEDURE GetEmployee(IN emp_id INT)
+CREATE OR REPLACE PROCEDURE get_employee (
+    p_emp_id IN employees.employee_id%TYPE
+)
+AS
+    v_name employees.first_name%TYPE;
 BEGIN
-    SELECT *
+    SELECT first_name
+    INTO v_name
     FROM employees
-    WHERE employee_id = emp_id;
-END //
+    WHERE employee_id = p_emp_id;
 
-DELIMITER ;
+    DBMS_OUTPUT.PUT_LINE('Employee: ' || v_name);
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Employee not found');
+END;
+/
 ```
 
 ### Execute Procedure
 
 ```sql
-CALL GetEmployee(101);
-```
-
-### Procedure with OUT Parameter
-
-```sql
-DELIMITER //
-
-CREATE PROCEDURE GetEmployeeCount(OUT total INT)
 BEGIN
-    SELECT COUNT(*)
-    INTO total
-    FROM employees;
-END //
-
-DELIMITER ;
+    get_employee(101);
+END;
+/
 ```
 
-Execute:
+Or in SQL Developer:
 
 ```sql
-CALL GetEmployeeCount(@total);
-
-SELECT @total;
+EXEC get_employee(101);
 ```
 
 ### Procedure Parameters
@@ -2165,80 +2481,202 @@ SELECT @total;
 | Parameter | Meaning |
 |---|---|
 | IN | Passes a value into the procedure |
-| OUT | Returns a value from the procedure |
-| INOUT | Accepts a value and can modify and return it |
+| OUT | Returns a value to the caller |
+| IN OUT | Accepts a value and can return a modified value |
+
+### Procedure with OUT Parameter
+
+```sql
+CREATE OR REPLACE PROCEDURE get_employee_count (
+    p_total OUT NUMBER
+)
+AS
+BEGIN
+    SELECT COUNT(*)
+    INTO p_total
+    FROM employees;
+END;
+/
+```
+
+Execute in a PL/SQL block:
+
+```sql
+DECLARE
+    v_total NUMBER;
+BEGIN
+    get_employee_count(v_total);
+    DBMS_OUTPUT.PUT_LINE(v_total);
+END;
+/
+```
 
 ### DROP PROCEDURE
 
 ```sql
-DROP PROCEDURE GetEmployee;
+DROP PROCEDURE get_employee;
 ```
 
 ---
 
-# 25. Functions and Triggers
+# 28. Functions
 
-## User-Defined Functions
+A function is a stored PL/SQL program that returns a value.
 
-A function is a reusable database routine that returns a value.
+### CREATE FUNCTION
 
 ```sql
-DELIMITER //
-
-CREATE FUNCTION AnnualSalary(monthly_salary DECIMAL(10,2))
-RETURNS DECIMAL(12,2)
-DETERMINISTIC
+CREATE OR REPLACE FUNCTION annual_salary (
+    p_monthly_salary NUMBER
+)
+RETURN NUMBER
+IS
 BEGIN
-    RETURN monthly_salary * 12;
-END //
-
-DELIMITER ;
+    RETURN p_monthly_salary * 12;
+END;
+/
 ```
 
-Execute:
+### Execute Function in SQL
 
 ```sql
-SELECT AnnualSalary(5000);
+SELECT annual_salary(5000)
+FROM dual;
 ```
 
-### Stored Procedure vs Function
+### Function vs Procedure
 
-| Procedure | Function |
+| Function | Procedure |
 |---|---|
-| Called using CALL | Used inside SQL expressions |
-| Can return multiple output parameters | Returns a single value |
-| Can perform database operations | Has restrictions on database modifications |
-| Used for executing a sequence of operations | Used for reusable calculations |
+| Must return a value | Does not have to return a value |
+| Can be used in SQL expressions subject to SQL-callable restrictions | Called as a PL/SQL statement |
+| Uses RETURN to provide a value | Can return values through OUT parameters |
+| Useful for reusable calculations | Useful for performing operations |
 
-## Triggers
+---
+
+# 29. Cursors
+
+A cursor is a pointer to the result set of a SQL statement.
+
+## Implicit Cursor
+
+Oracle automatically creates an implicit cursor for SQL statements such as INSERT, UPDATE, DELETE, and SELECT INTO.
+
+Useful attributes:
+
+- `SQL%ROWCOUNT` — number of rows affected or returned by the most recent SQL statement.
+- `SQL%FOUND` — TRUE if the most recent SQL statement affected or returned rows.
+- `SQL%NOTFOUND` — TRUE if it did not affect or return rows.
+- `SQL%ISOPEN` — always FALSE after an implicit SQL statement completes.
+
+```sql
+BEGIN
+    UPDATE employees
+    SET salary = salary * 1.1
+    WHERE department_id = 10;
+
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT);
+END;
+/
+```
+
+## Explicit Cursor
+
+A programmer-defined cursor for processing a query result row by row.
+
+```sql
+DECLARE
+    CURSOR emp_cursor IS
+        SELECT employee_id, first_name
+        FROM employees;
+
+    v_id employees.employee_id%TYPE;
+    v_name employees.first_name%TYPE;
+BEGIN
+    OPEN emp_cursor;
+
+    LOOP
+        FETCH emp_cursor INTO v_id, v_name;
+        EXIT WHEN emp_cursor%NOTFOUND;
+
+        DBMS_OUTPUT.PUT_LINE(v_id || ' ' || v_name);
+    END LOOP;
+
+    CLOSE emp_cursor;
+END;
+/
+```
+
+## Cursor FOR LOOP
+
+Oracle automatically opens, fetches, and closes the cursor.
+
+```sql
+BEGIN
+    FOR emp IN (
+        SELECT employee_id, first_name
+        FROM employees
+    ) LOOP
+        DBMS_OUTPUT.PUT_LINE(
+            emp.employee_id || ' ' || emp.first_name
+        );
+    END LOOP;
+END;
+/
+```
+
+---
+
+# 30. Triggers
 
 A trigger automatically executes when a specified database event occurs.
 
-### CREATE TRIGGER
+### BEFORE INSERT Trigger
 
 ```sql
-DELIMITER //
-
-CREATE TRIGGER before_employee_insert
+CREATE OR REPLACE TRIGGER before_employee_insert
 BEFORE INSERT ON employees
 FOR EACH ROW
 BEGIN
-    SET NEW.salary = IFNULL(NEW.salary, 0);
-END //
+    IF :NEW.salary IS NULL THEN
+        :NEW.salary := 0;
+    END IF;
+END;
+/
+```
 
-DELIMITER ;
+### AFTER INSERT Trigger
+
+```sql
+CREATE OR REPLACE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('New employee inserted');
+END;
+/
 ```
 
 ### Trigger Events
 
 | Event | Meaning |
 |---|---|
-| BEFORE INSERT | Executes before inserting a row |
-| AFTER INSERT | Executes after inserting a row |
-| BEFORE UPDATE | Executes before updating a row |
-| AFTER UPDATE | Executes after updating a row |
-| BEFORE DELETE | Executes before deleting a row |
-| AFTER DELETE | Executes after deleting a row |
+| BEFORE INSERT | Executes before a row is inserted |
+| AFTER INSERT | Executes after a row is inserted |
+| BEFORE UPDATE | Executes before a row is updated |
+| AFTER UPDATE | Executes after a row is updated |
+| BEFORE DELETE | Executes before a row is deleted |
+| AFTER DELETE | Executes after a row is deleted |
+
+### :NEW and :OLD
+
+| Reference | Meaning |
+|---|---|
+| :NEW | New column values |
+| :OLD | Existing column values before the change |
+
+For INSERT, `:NEW` is available. For DELETE, `:OLD` is available. For UPDATE, both are available.
 
 ### DROP TRIGGER
 
@@ -2248,25 +2686,17 @@ DROP TRIGGER before_employee_insert;
 
 ---
 
-# 26. Transactions
+# 31. Transactions
 
-A transaction is a group of SQL operations treated as a single logical unit.
+A transaction is a logical unit of work.
 
-## START TRANSACTION
+Oracle transactions begin implicitly when a transaction starts with a DML statement or an explicit transaction control statement.
 
-Begins a transaction.
+### COMMIT
 
-```sql
-START TRANSACTION;
-```
-
-## COMMIT
-
-Permanently saves the changes made in the transaction.
+Permanently saves the current transaction.
 
 ```sql
-START TRANSACTION;
-
 UPDATE employees
 SET salary = 10000
 WHERE employee_id = 101;
@@ -2274,27 +2704,23 @@ WHERE employee_id = 101;
 COMMIT;
 ```
 
-## ROLLBACK
+### ROLLBACK
 
 Reverts uncommitted changes.
 
 ```sql
-START TRANSACTION;
-
 UPDATE employees
-SET salary = 10000
+SET salary = 12000
 WHERE employee_id = 101;
 
 ROLLBACK;
 ```
 
-## SAVEPOINT
+### SAVEPOINT
 
 Creates a point within a transaction to which you can roll back.
 
 ```sql
-START TRANSACTION;
-
 UPDATE employees
 SET salary = 10000
 WHERE employee_id = 101;
@@ -2305,7 +2731,7 @@ UPDATE employees
 SET salary = 12000
 WHERE employee_id = 102;
 
-ROLLBACK TO SAVEPOINT sp1;
+ROLLBACK TO sp1;
 
 COMMIT;
 ```
@@ -2316,96 +2742,93 @@ COMMIT;
 |---|---|
 | Atomicity | All operations succeed or the transaction is rolled back |
 | Consistency | Data remains valid according to database rules |
-| Isolation | Concurrent transactions are controlled to prevent interference |
+| Isolation | Concurrent transactions are controlled |
 | Durability | Committed changes persist |
 
-### Transaction Isolation Levels
+### Important Oracle Transaction Note
 
-| Isolation Level | Description |
-|---|---|
-| READ UNCOMMITTED | Allows dirty reads |
-| READ COMMITTED | Prevents dirty reads |
-| REPEATABLE READ | Prevents dirty and non-repeatable reads |
-| SERIALIZABLE | Provides the strictest standard isolation |
-
-### Common Transaction Problems
-
-- Dirty Read: Reading uncommitted changes made by another transaction.
-- Non-repeatable Read: Reading the same row twice and getting different values.
-- Phantom Read: Repeating a query and getting a different set of matching rows.
+- DML changes can be committed or rolled back.
+- DDL statements generally perform an implicit commit.
+- `TRUNCATE` cannot be rolled back like an uncommitted DELETE.
+- SQL Developer may have Auto Commit settings; check them when practicing transactions.
 
 ---
 
-# 27. Performance Optimization
+# 32. Performance and Execution Plans
 
-## EXPLAIN
+### EXPLAIN PLAN
 
-Displays the execution plan of a SQL query.
+Shows the optimizer's estimated execution plan.
 
 ```sql
-EXPLAIN
+EXPLAIN PLAN FOR
 SELECT *
 FROM employees
 WHERE salary > 10000;
 ```
 
-### EXPLAIN ANALYZE
-
-Executes the query and provides actual execution information along with the plan.
+Display the plan:
 
 ```sql
-EXPLAIN ANALYZE
 SELECT *
-FROM employees
-WHERE salary > 10000;
+FROM TABLE(DBMS_XPLAN.DISPLAY);
 ```
 
-**Note:** Available in MySQL 8.0.18 and later.
+### Gather Table Statistics
+
+For suitable practice or administrative environments, statistics can be gathered using:
+
+```sql
+BEGIN
+    DBMS_STATS.GATHER_TABLE_STATS(
+        ownname => USER,
+        tabname => 'EMPLOYEES'
+    );
+END;
+/
+```
+
+This requires appropriate privileges and should be used thoughtfully in production.
+
+### View Execution Plan in SQL Developer
+
+1. Write your SELECT query.
+2. Select the query.
+3. Use the Explain Plan option or press F10.
+4. Inspect the execution plan.
 
 ### Optimization Techniques
 
-1. Avoid SELECT * when only specific columns are required.
-2. Create indexes on frequently filtered and joined columns.
-3. Avoid unnecessary subqueries when a JOIN or CTE is clearer.
-4. Use WHERE to filter rows as early as appropriate.
-5. Avoid unnecessary DISTINCT operations.
-6. Avoid functions on indexed columns in WHERE conditions when they prevent efficient index usage.
-7. Use LIMIT when only a small result set is required.
-8. Analyze query execution plans using EXPLAIN.
-9. Avoid unnecessary indexes.
-10. Use appropriate data types and constraints.
-
-### Example: Avoid SELECT *
-
-```sql
--- Less efficient when all columns are unnecessary
-SELECT *
-FROM employees;
-
--- Better when only two columns are required
-SELECT first_name, salary
-FROM employees;
-```
+1. Avoid SELECT * when only selected columns are needed.
+2. Index frequently filtered and joined columns when appropriate.
+3. Avoid unnecessary DISTINCT operations.
+4. Use appropriate data types.
+5. Avoid unnecessary functions on indexed columns in filter conditions.
+6. Use bind variables for repeated queries where appropriate.
+7. Check execution plans.
+8. Avoid unnecessary indexes.
+9. Filter data as early as appropriate.
+10. Keep optimizer statistics current.
 
 ---
 
-# 28. SQL Execution Order
+# 33. SQL Logical Processing Order
 
-Understanding SQL execution order is important for writing and debugging complex queries.
+The logical processing order helps explain why some aliases and aggregate expressions cannot be used in certain clauses.
 
-Although SQL is written in a different order, its logical processing order is generally:
+A simplified logical order is:
 
 | Order | Clause | Purpose |
 |---|---|---|
-| 1 | FROM | Selects the source table |
-| 2 | JOIN / ON | Combines tables |
-| 3 | WHERE | Filters individual rows |
-| 4 | GROUP BY | Groups records |
+| 1 | FROM | Identifies source tables |
+| 2 | JOIN / ON | Combines rows |
+| 3 | WHERE | Filters rows |
+| 4 | GROUP BY | Groups rows |
 | 5 | HAVING | Filters groups |
-| 6 | SELECT | Selects and calculates output columns |
+| 6 | SELECT | Calculates selected expressions |
 | 7 | DISTINCT | Removes duplicate result rows |
 | 8 | ORDER BY | Sorts the result |
-| 9 | LIMIT / OFFSET | Restricts the result |
+| 9 | OFFSET / FETCH | Limits returned rows |
 
 ### Example
 
@@ -2416,10 +2839,10 @@ WHERE salary > 3000
 GROUP BY department_id
 HAVING AVG(salary) > 8000
 ORDER BY avg_salary DESC
-LIMIT 5;
+FETCH FIRST 5 ROWS ONLY;
 ```
 
-**Logical Execution:**
+**Logical execution:**
 
 1. FROM employees
 2. WHERE salary > 3000
@@ -2427,15 +2850,15 @@ LIMIT 5;
 4. HAVING AVG(salary) > 8000
 5. SELECT department_id and AVG(salary)
 6. ORDER BY avg_salary DESC
-7. LIMIT 5
+7. FETCH FIRST 5 ROWS ONLY
 
-**Interview Tip:** A SELECT alias generally cannot be referenced in WHERE because WHERE is processed before SELECT. It can commonly be referenced in ORDER BY.
+**Interview tip:** A SELECT alias generally cannot be referenced in WHERE because WHERE is processed before SELECT. It can be referenced in ORDER BY.
 
 ---
 
-# 29. SQL Interview Quick Reference
+# 34. Oracle SQL Interview Questions
 
-Frequently asked SQL problems and their solutions.
+Frequently asked SQL problems with Oracle-compatible solutions.
 
 ## Q1. Find the Highest Salary
 
@@ -2447,32 +2870,45 @@ FROM employees;
 ## Q2. Find the Second Highest Distinct Salary
 
 ```sql
-SELECT DISTINCT salary
+SELECT MAX(salary)
 FROM employees
-ORDER BY salary DESC
-LIMIT 1 OFFSET 1;
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM employees
+);
+```
+
+Alternative using DENSE_RANK:
+
+```sql
+SELECT salary
+FROM (
+    SELECT
+        salary,
+        DENSE_RANK() OVER(ORDER BY salary DESC) AS rnk
+    FROM employees
+)
+WHERE rnk = 2
+GROUP BY salary;
 ```
 
 ## Q3. Find the Nth Highest Salary
 
 ```sql
-WITH ranked AS (
+SELECT salary
+FROM (
     SELECT
         salary,
-        DENSE_RANK() OVER(
-            ORDER BY salary DESC
-        ) AS rnk
+        DENSE_RANK() OVER(ORDER BY salary DESC) AS rnk
     FROM employees
 )
-
-SELECT DISTINCT salary
-FROM ranked
-WHERE rnk = 3;
+WHERE rnk = 3
+GROUP BY salary;
 ```
 
 Replace 3 with the required rank.
 
-## Q4. Find Employees Earning More Than the Company Average
+## Q4. Find Employees Earning More Than Company Average
 
 ```sql
 SELECT *
@@ -2507,7 +2943,7 @@ FROM (
             ORDER BY salary DESC
         ) AS rnk
     FROM employees e
-) ranked
+)
 WHERE rnk = 1;
 ```
 
@@ -2525,7 +2961,7 @@ ON e.manager_id = m.employee_id
 WHERE e.salary > m.salary;
 ```
 
-## Q8. Find Duplicate Records Based on Email
+## Q8. Find Duplicate Emails
 
 ```sql
 SELECT email, COUNT(*) AS total
@@ -2551,7 +2987,7 @@ FROM employees
 WHERE manager_id IS NULL;
 ```
 
-## Q11. Find Employees Who Do Not Belong to Any Department
+## Q11. Find Employees Without a Matching Department
 
 ```sql
 SELECT e.*
@@ -2561,10 +2997,11 @@ ON e.department_id = d.department_id
 WHERE d.department_id IS NULL;
 ```
 
-## Q12. Find the Top 3 Salaries in Each Department
+## Q12. Find Top 3 Salaries in Each Department
 
 ```sql
-WITH ranked AS (
+SELECT *
+FROM (
     SELECT
         first_name,
         department_id,
@@ -2575,9 +3012,6 @@ WITH ranked AS (
         ) AS rnk
     FROM employees
 )
-
-SELECT *
-FROM ranked
 WHERE rnk <= 3;
 ```
 
@@ -2594,7 +3028,8 @@ GROUP BY department_id;
 ```sql
 SELECT *
 FROM employees
-WHERE YEAR(hire_date) = YEAR(CURDATE());
+WHERE hire_date >= TRUNC(SYSDATE, 'YYYY')
+AND hire_date < ADD_MONTHS(TRUNC(SYSDATE, 'YYYY'), 12);
 ```
 
 ## Q15. Find the Difference Between Maximum and Minimum Salary
@@ -2604,11 +3039,46 @@ SELECT MAX(salary) - MIN(salary) AS salary_difference
 FROM employees;
 ```
 
+## Q16. Find Employees Who Share the Same Salary
+
+```sql
+SELECT salary, COUNT(*) AS employee_count
+FROM employees
+GROUP BY salary
+HAVING COUNT(*) > 1;
+```
+
+## Q17. Find Departments Without Employees
+
+```sql
+SELECT d.*
+FROM departments d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM employees e
+    WHERE e.department_id = d.department_id
+);
+```
+
+## Q18. Display Employees and Their Rank Within Each Department
+
+```sql
+SELECT
+    first_name,
+    department_id,
+    salary,
+    RANK() OVER(
+        PARTITION BY department_id
+        ORDER BY salary DESC
+    ) AS dept_rank
+FROM employees;
+```
+
 ---
 
-# 30. SQL Learning Roadmap
+# 35. SQL Learning Roadmap
 
-A structured roadmap for learning SQL from beginner to advanced level.
+A structured roadmap for learning Oracle SQL from beginner to advanced.
 
 ### Beginner
 
@@ -2621,7 +3091,7 @@ A structured roadmap for learning SQL from beginner to advanced level.
 - [ ] LIKE / NOT LIKE
 - [ ] IS NULL / IS NOT NULL
 - [ ] ORDER BY
-- [ ] LIMIT / OFFSET
+- [ ] FETCH FIRST / OFFSET
 - [ ] Column Aliases
 - [ ] Aggregate Functions
 
@@ -2629,7 +3099,7 @@ A structured roadmap for learning SQL from beginner to advanced level.
 
 - [ ] GROUP BY
 - [ ] HAVING
-- [ ] CASE WHEN
+- [ ] CASE Expressions
 - [ ] INNER JOIN
 - [ ] LEFT JOIN
 - [ ] RIGHT JOIN
@@ -2638,17 +3108,19 @@ A structured roadmap for learning SQL from beginner to advanced level.
 - [ ] SELF JOIN
 - [ ] Multiple JOINs
 - [ ] UNION / UNION ALL
-- [ ] Single Row Subqueries
-- [ ] Multiple Row Subqueries
+- [ ] INTERSECT / MINUS
+- [ ] Single-Row Subqueries
+- [ ] Multiple-Row Subqueries
 - [ ] Correlated Subqueries
 - [ ] EXISTS / NOT EXISTS
 - [ ] ANY / ALL
 
-### Advanced
+### Advanced SQL
 
-- [ ] Common Table Expressions (CTEs)
-- [ ] Recursive CTEs
-- [ ] Window Functions
+- [ ] Common Table Expressions
+- [ ] Recursive Subquery Factoring
+- [ ] Hierarchical Queries
+- [ ] Analytic Functions
 - [ ] ROW_NUMBER()
 - [ ] RANK()
 - [ ] DENSE_RANK()
@@ -2657,38 +3129,43 @@ A structured roadmap for learning SQL from beginner to advanced level.
 - [ ] FIRST_VALUE() / LAST_VALUE()
 - [ ] Running Totals
 - [ ] Conditional Aggregation
-- [ ] Advanced Date and String Functions
 
-### Database Development
+### PL/SQL and Database Development
 
-- [ ] CREATE / ALTER / DROP
-- [ ] Primary and Foreign Keys
-- [ ] Constraints
-- [ ] INSERT / UPDATE / DELETE
-- [ ] Indexes
-- [ ] Views
-- [ ] Stored Procedures
-- [ ] User-Defined Functions
+- [ ] PL/SQL Blocks
+- [ ] Variables and Constants
+- [ ] IF / ELSIF / ELSE
+- [ ] Loops
+- [ ] Exception Handling
+- [ ] Procedures
+- [ ] Functions
+- [ ] Implicit and Explicit Cursors
 - [ ] Triggers
+- [ ] Sequences
+- [ ] Identity Columns
+- [ ] Views
+- [ ] Indexes
 - [ ] Transactions
 - [ ] ACID Properties
-- [ ] Isolation Levels
 
-### Performance and Optimization
+### Performance
 
-- [ ] EXPLAIN
-- [ ] EXPLAIN ANALYZE
+- [ ] EXPLAIN PLAN
+- [ ] DBMS_XPLAN
 - [ ] Index Optimization
 - [ ] Query Optimization
-- [ ] Understanding Execution Plans
+- [ ] Execution Plan Analysis
+- [ ] Bind Variables
+- [ ] Table Statistics
 
 ---
 
-# ⭐ Additional SQL Learning Resources
+# 📚 Additional Learning Resources
 
-- [MySQL Official Documentation](https://dev.mysql.com/doc/)
-- [W3Schools SQL Tutorial](https://www.w3schools.com/sql/)
-- [SQLBolt - Interactive SQL Lessons](https://sqlbolt.com/)
+- [Oracle SQL Language Reference](https://docs.oracle.com/en/database/oracle/oracle-database/)
+- [Oracle Database SQL Developer Documentation](https://docs.oracle.com/en/database/oracle/sql-developer/)
+- [Oracle Live SQL](https://livesql.oracle.com/)
+- [Oracle SQL Tutorial](https://www.oracletutorial.com/)
 - [LeetCode SQL 50](https://leetcode.com/studyplan/top-sql-50/)
 - [HackerRank SQL Practice](https://www.hackerrank.com/domains/sql)
 
@@ -2696,8 +3173,18 @@ A structured roadmap for learning SQL from beginner to advanced level.
 
 ## 💡 Final Note
 
-SQL is best learned through consistent practice. Focus on understanding how queries work rather than memorizing their syntax.
+SQL is best learned through consistent practice. Focus on understanding query logic instead of memorizing syntax.
 
-Practice JOINs, GROUP BY, subqueries, CTEs, and window functions regularly because they are especially important for SQL interviews.
+For Oracle SQL interviews, pay particular attention to:
+
+- JOINs and subqueries
+- GROUP BY and HAVING
+- Correlated subqueries
+- EXISTS and NOT EXISTS
+- CTEs
+- Analytic and ranking functions
+- NULL handling
+- Oracle date functions
+- PL/SQL procedures, functions, cursors, and triggers
 
 **Happy Querying! 🚀**
